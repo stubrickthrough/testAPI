@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Title</h1>
+        <script type="text/javascript" src="https://unpkg.com/github-api/dist/GitHub.bundle.min.js"></script>
+        <script>
+            document.write("<h1>"+ "Point1" +"</h1>")
+
+            var gh = new GitHub({
+            });
+
+            // token auth
+            // var yahoo = gh.getOrganization('stubrickthrough');
+            // yahoo.getRepos(function(err, repos) {
+            //     repos.forEach(repo => {
+            //         console.log(repo);
+            //     });
+            // });
+
+            document.write("<h1>"+ "Point1 Done" +"</h1>")
+
+            var stu = gh.getIssues("stubrickthrough", "testAPI");
+
+            document.write("<h1>"+ "Point2" +"</h1>")
+
+            console.log(stu);
+
+            stu.createIssueComment(1, "This is a test comment.")          
+            
+            document.write("<h1>"+ "Point3" +"</h1>")
+
+            
+        </script>
+    </body>
+</html>
