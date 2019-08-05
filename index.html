@@ -101,13 +101,13 @@
 								</div> -->
 								<!-- Break -->
 								<div class="col-12">
-									<textarea name="textarea" id="textarea" placeholder="Enter your code here..." rows="6"></textarea>
+									<textarea name="textarea" id="textarea" placeholder="Enter your python3 code here..." rows="6"></textarea>
 								</div>
 								<!-- Break -->
 								<div class="col-12">
 									<ul class="actions">
-										<li><input type="submit" value="Submit Form" class="primary" id="submitBTN" /></li>
-										<li><input type="reset" value="Reset" /></li>
+										<li><input type="submit" value="Submit Code" class="primary" id="submitBTN" /></li>
+										<li><input type="reset" value="Reset" id="reset" /></li>
 									</ul>
 								</div>
 								<!-- Break -->
@@ -135,7 +135,7 @@
 					stdin = '';
 					runcode = 20; // python3
 					$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
-						$("#result").text((data.output+data.errors).replace("\n官方网站:http://www.dooccn.com",''));
+						$("#result").text((data.output+data.errors).replace("官方网站:http://www.dooccn.com",''));
 					});
 					setTimeout(function(){
 						btn[0].className = "primary";
