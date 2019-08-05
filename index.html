@@ -135,7 +135,7 @@
 					stdin = '';
 					runcode = 20; // python3
 					$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
-						$("#result").text(data.output+data.errors);
+						$("#result").text((data.output+data.errors).replace("\n官方网站:http://www.dooccn.com",''));
 					});
 					setTimeout(function(){
 						btn[0].className = "primary";
