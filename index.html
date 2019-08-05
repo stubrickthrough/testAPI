@@ -135,7 +135,7 @@
 					stdin = '';
 					runcode = 20; // python3
 					$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
-						$("#result").text((data.output+data.errors).replace("官方网站:http://www.dooccn.com",''));
+						$("#result").text((data.output+data.errors).replace("\r\n\r\n官方网站:http://www.dooccn.com",''));
 					});
 					setTimeout(function(){
 						btn[0].className = "primary";
@@ -252,29 +252,26 @@
 					<div class="content">
 						<section>
 							<h3>关于我们</h3>
-							<p>暂时缺位的简介。</p>
+							<p>上海科技大学搬砖社（ShanghaiTechBrickThrough）是一个致力于翻译搬运英文高质量学术视频的学生组织。社团成立于2019年暑期，距离专业学术搬运二十年还有二十年。我们的发展愿景是打造一个集半公开翻译、学习教育、专业视频搬运为一体的综合学术平台。在做在线课程搬运工作的同时，我们也希望从多维度帮助同学们更方便、更高效地学习。我们期待看到您的Break Through！</p>
 						</section>
 						<section>
 							<h4>快速访问</h4>
 							<ul class="alt">
 								<li><a href="http://www.shanghaitech.edu.cn/">上海科技大学</a></li>
-								<li><a href="#">Etiam vel lorem sed amet.</a></li>
-								<li><a href="#">Felis enim feugiat viverra.</a></li>
-								<li><a href="#">Dolor pulvinar magna etiam.</a></li>
 							</ul>
 						</section>
 						<section>
 							<h4>联系方式</h4>
 							<ul class="plain">
-								<li><a href="#"><i class="icon fa-twitter">&nbsp;</i>Twitter</a></li>
-								<li><a href="#"><i class="icon fa-facebook">&nbsp;</i>Facebook</a></li>
-								<li><a href="#"><i class="icon fa-instagram">&nbsp;</i>Instagram</a></li>
-								<li><a href="#"><i class="icon fa-github">&nbsp;</i>Github</a></li>
+								<li><a href="mailto:zhoual@shanghaitech.edu.cn"><i class="icon fa-envelope-o">&nbsp;</i>E-mail</a></li>
+								<li><a href="https://github.com/stubrickthrough"><i class="icon fa-github">&nbsp;</i>Github</a></li>
+								<li><a href="https://space.bilibili.com/438060628"><i class="icon fa-video-camera">&nbsp;</i>Bilibili</a></li>
+								<li><a href="http://wpa.qq.com/msgrd?v=3&uin=1132482282&site=qq&menu=yes"><i class="icon fa-qq">&nbsp;</i>QQ</a></li>
 							</ul>
 						</section>
 					</div>
 					<div class="copyright">
-						&copy; 2019 ShanghaiTech BrickThrough. Website support <a href="https://templated.co/">Templated</a>. All rights reserved.
+						&copy; 2019 ShanghaiTech BrickThrough. Website support <a href="https://templated.co/">Templated</a>. Picture from <a href="http://www.shanghaitech.edu.cn/mlxy/list.htm">ShanghaiTech</a>. Logo by 林希越. All rights reserved.
 					</div>
 				</div>
 			</footer>
