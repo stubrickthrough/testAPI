@@ -6,12 +6,12 @@
 -->
 <html>
 	<head>
-		<title>2019新生指南</title>
+		<title>Lesson 1 "Hello World"</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
-		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="../assets/css/main.css" />
 		<link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css">
 		<link rel="stylesheet" href="https://codemirror.net/theme/darcula.css"/>
 		<link rel="stylesheet" href="https://codemirror.net/addon/fold/foldgutter.css">
@@ -40,7 +40,7 @@
 			<nav id="menu">
 				<ul class="links">
 					<li><a href="index.html">主页</a></li>
-					<li><a href="CS100/SummerLesson01.html">Lesson01</a></li>
+					<li><a href="elements.html">Elements</a></li>
 					<li><a href="generic.html">Generic</a></li>
 				</ul>
 			</nav>
@@ -48,8 +48,9 @@
 		<!-- Heading -->
 			<section id="heading">
 				<div class="inner">
-					<h1>Test Page</h1>
-					<h2>This page is for test</h2>
+					<h1>Lesson 1</h1>
+					<h1>"Hello World"</h1>
+					<h3>From CS100 Summer Homework</h3>
 				</div>
 			</section>
 
@@ -59,7 +60,7 @@
 					<div class="content">
 
 						<!-- Form -->
-						<h3>Code Test (Language: python3)</h3>
+						<h3>Code Test (Language: C)</h3>
 							<div class="row gtr-uniform">
 								
 								<!-- Break -->
@@ -85,7 +86,7 @@
 				</div>
 
 				<script src="https://codemirror.net/lib/codemirror.js"></script>
-				<script src="https://codemirror.net/mode/python/python.js"></script>
+				<script src="https://codemirror.net/mode/clike/clike.js"></script>
 
 				<script src="https://codemirror.net/addon/selection/active-line.js"></script>
 				<script src="https://codemirror.net/addon/fold/foldcode.js"></script>
@@ -107,10 +108,10 @@
 						gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
 						styleActiveLine: true,
 						theme: "darcula",
-						mode:  "python"
+						mode:  "text/x-csrc"
 					});
 
-					editor.setValue("# -*- coding: UTF-8 -*-\nprint('Hello World!')\n");
+					editor.setValue("#include <stdio.h>\n\nint main(void) { \n    // YOUR CODE HERE.\n    return 0;\n}");
 
 					var apiurl = "https://runcode-api2-ng.dooccn.com";
 
@@ -124,9 +125,10 @@
 
 						code = Base64.encode(code);
 						stdin = '';
-						runcode = 20; // python3
+						runcode = 7; // C
 						$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
-							$("#result").text((data.output+data.errors).replace("\r\n\r\n官方网站:http://www.dooccn.com",''));
+							$("#result").text("output:\n"+data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'')+
+							                  "errors:\n"+data.errors);
 						});
 						setTimeout(function(){
 							btn[0].className = "primary";
@@ -179,11 +181,11 @@
 			</footer>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/browser.min.js"></script>
+			<script src="../assets/js/breakpoints.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<script src="../assets/js/main.js"></script>
 
 	</body>
 </html>
