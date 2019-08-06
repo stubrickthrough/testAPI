@@ -128,7 +128,7 @@
 						runcode = 7; // C
 						$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
 							$("#result").text("output:\n"+data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'')+
-							                  "errors:\n"+data.errors);
+							                  "\nerrors:\n"+data.errors);
 						});
 						setTimeout(function(){
 							btn[0].className = "primary";
