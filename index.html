@@ -12,6 +12,19 @@
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css">
+		<link rel="stylesheet" href="https://codemirror.net/theme/darcula.css"/>
+		<link rel="stylesheet" href="https://codemirror.net/addon/fold/foldgutter.css">
+		<style>
+			.CodeMirror.cm-s-darcula.CodeMirror-wrap{
+				border-radius: 0.5rem;
+			}
+			.CodeMirror.cm-s-darcula.CodeMirror-wrap.CodeMirror-focused {
+				border-color: #ce1b28;
+				box-shadow: 0 0 0 3px #ce1b28; 
+			}
+		</style>
+		
 	</head>
 	<body class="is-preload">
 
@@ -40,68 +53,20 @@
 				</div>
 			</section>
 
-			<!-- <section class="wrapper">
-				<div class="inner">
-					<header class="special">
-						<h2>写在前面的话</h2>
-						<p>也没有什么话好讲。反正进来了。</p>
-					</header>
-				</div>
-			</section> -->
-
 		<!-- Content -->
 			<section id="main" class="wrapper">
 				<div class="inner">
 					<div class="content">
 
 						<!-- Form -->
-						<h3>Code Test</h3>
+						<h3>Code Test (Language: python3)</h3>
 							<div class="row gtr-uniform">
-								<!-- <div class="col-6 col-12-xsmall">
-									<input type="text" name="name" id="name" value="" placeholder="Name" />
-								</div>
-								<div class="col-6 col-12-xsmall">
-									<input type="email" name="email" id="email" value="" placeholder="Email" />
-								</div> -->
-								<!-- Break -->
-								<!-- <div class="col-12">
-									<select name="category" id="category">
-										<option value="">- Select -</option>
-										<option value="alpha">Option alpha</option>
-										<option value="beta">Option beta</option>
-										<option value="gamma">Option gamma</option>
-										<option value="delta">Option delta</option>
-										<option value="epsilon">Option epsilon</option>
-										<option value="zeta">Option zeta</option>
-										<option value="eta">Option eta</option>
-										<option value="theta">Option theta</option>
-									</select>
-								</div> -->
-								<!-- Break -->
-								<!-- <div class="col-4 col-12-small">
-									<input type="radio" id="radio-alpha" name="radio" checked>
-									<label for="radio-alpha">Radio alpha</label>
-								</div>
-								<div class="col-4 col-12-small">
-									<input type="radio" id="radio-beta" name="radio">
-									<label for="radio-beta">Radio beta</label>
-								</div>
-								<div class="col-4 col-12-small">
-									<input type="radio" id="radio-gamma" name="radio">
-									<label for="radio-gamma">Radio gamma</label>
-								</div> -->
-								<!-- Break -->
-								<!-- <div class="col-6 col-12-small">
-									<input type="checkbox" id="checkbox-alpha" name="checkbox">
-									<label for="checkbox-alpha">Checkbox alpha</label>
-								</div>
-								<div class="col-6 col-12-small">
-									<input type="checkbox" id="checkbox-beta" name="checkbox" checked>
-									<label for="checkbox-beta">Checkbox beta</label>
-								</div> -->
+								
 								<!-- Break -->
 								<div class="col-12">
-									<textarea name="textarea" id="textarea" placeholder="Enter your python3 code here..." rows="6"></textarea>
+									<div class="codearea">
+										<textarea name="textarea" id="textareaCode" rows="6"></textarea>
+									</div>
 								</div>
 								<!-- Break -->
 								<div class="col-12">
@@ -118,39 +83,57 @@
 						
 					</div>
 				</div>
-				<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script> -->
-				<script src="https://www.w3xue.com/tools/support/jquery-min.js"></script>
+
+				<script src="https://codemirror.net/lib/codemirror.js"></script>
+				<script src="https://codemirror.net/mode/python/python.js"></script>
+
+				<script src="https://codemirror.net/addon/selection/active-line.js"></script>
+				<script src="https://codemirror.net/addon/fold/foldcode.js"></script>
+				<script src="https://codemirror.net/addon/fold/foldgutter.js"></script>
+				<script src="https://codemirror.net/addon/fold/brace-fold.js"></script>
+				<script src="https://codemirror.net/addon/fold/indent-fold.js"></script>
+
+				
+				<script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
 				<script src="https://www.w3xue.com/tools/support/base64.min.js" ></script>
 				<script>
-				
-				
-				var apiurl = "https://runcode-api2-ng.dooccn.com"
-
-				btn = $("#submitBTN");
-				btn.click(function() {
-					btn[0].className = "primary disabled";
-				
-					code = $('#textarea')[0].value;
-					code = Base64.encode(code);
-					stdin = '';
-					runcode = 20; // python3
-					$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
-						$("#result").text((data.output+data.errors).replace("\r\n\r\n官方网站:http://www.dooccn.com",''));
+					var editor = CodeMirror.fromTextArea(document.getElementById("textareaCode"), {
+						lineNumbers: true,
+						lineWrapping:true,
+						smartIndent: true,
+						indentUnit: 4,
+						indentWithTabs: true,
+						foldGutter: true,
+						gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+						styleActiveLine: true,
+						theme: "darcula",
+						mode:  "python"
 					});
-					setTimeout(function(){
-						btn[0].className = "primary";
-					}, 10*1000);
-				});
+
+					editor.setValue("# -*- coding: UTF-8 -*-\nprint('Hello World!')\n");
+
+					var apiurl = "https://runcode-api2-ng.dooccn.com";
+
+					btn = $("#submitBTN");
+					btn.click(function() {
+						btn[0].className = "primary disabled";
+					
+						code = editor.getValue();
+
+						// TODO: processing the code.
+
+						code = Base64.encode(code);
+						stdin = '';
+						runcode = 20; // python3
+						$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
+							$("#result").text((data.output+data.errors).replace("\r\n\r\n官方网站:http://www.dooccn.com",''));
+						});
+						setTimeout(function(){
+							btn[0].className = "primary";
+						}, 10*1000);
+					});
 				</script>
 			</section>
-
-		<!-- CTA -->
-			<!-- <section id="cta" class="wrapper">
-				<div class="inner">
-					<h2>关于我们</h2>
-					<p>暂时缺位的简介。</p>
-				</div>
-			</section> -->
 		
 		<!-- Contact & Donate -->
 			<section id="cta" class="wrapper">
@@ -164,87 +147,6 @@
 				</div>
 			</section>
 		
-		<!-- Image -->
-			<!-- <section id="main">
-				<div class="col-6 col-12-medium">
-					<div class="row gtr-50 gtr-uniform">
-						<div class="col-3"><span class="image fit"><img src="images/cta01.jpg" alt="" /></span></div>
-					</div>
-				</div>
-
-				<div class="inner">
-					<div class="row">
-						<div class="special">
-							<div class="col-6 col-12-medium">
-								<h3>Image</h3>
-								<h4>Fit</h4>
-								
-								<div class="box alt">
-									<div class="row gtr-50 gtr-uniform">
-										<div class="col-4"><span class="image fit"><img src="images/icon.jpg" alt="" /></span></div>
-										<div class="col-4"><span class="image fit"><img src="images/icon.jpg" alt="" /></span></div>
-										<div class="col-4"><span class="image fit"><img src="images/icon.jpg" alt="" /></span></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section> -->
-		
-		
-			
-
-		<!-- Testimonials -->
-			<!-- <section class="wrapper">
-				<div class="inner">
-					<header class="special">
-						<h2>Faucibus consequat lorem</h2>
-						<p>In arcu accumsan arcu adipiscing accumsan orci ac. Felis id enim aliquet. Accumsan ac integer lobortis commodo ornare aliquet accumsan erat tempus amet porttitor.</p>
-					</header>
-					<div class="testimonials">
-						<section>
-							<div class="content">
-								<blockquote>
-									<p>Nunc lacinia ante nunc ac lobortis ipsum. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus.</p>
-								</blockquote>
-								<div class="author">
-									<div class="image">
-										<img src="images/pic01.jpg" alt="" />
-									</div>
-									<p class="credit">- <strong>Jane Doe</strong> <span>CEO - ABC Inc.</span></p>
-								</div>
-							</div>
-						</section>
-						<section>
-							<div class="content">
-								<blockquote>
-									<p>Nunc lacinia ante nunc ac lobortis ipsum. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus.</p>
-								</blockquote>
-								<div class="author">
-									<div class="image">
-										<img src="images/pic03.jpg" alt="" />
-									</div>
-									<p class="credit">- <strong>John Doe</strong> <span>CEO - ABC Inc.</span></p>
-								</div>
-							</div>
-						</section>
-						<section>
-							<div class="content">
-								<blockquote>
-									<p>Nunc lacinia ante nunc ac lobortis ipsum. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus.</p>
-								</blockquote>
-								<div class="author">
-									<div class="image">
-										<img src="images/pic02.jpg" alt="" />
-									</div>
-									<p class="credit">- <strong>Janet Smith</strong> <span>CEO - ABC Inc.</span></p>
-								</div>
-							</div>
-						</section>
-					</div>
-				</div>
-			</section> -->
 
 		<!-- Footer -->
 			<footer id="footer">
