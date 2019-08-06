@@ -111,7 +111,7 @@
 						mode:  "text/x-csrc"
 					});
 
-					editor.setValue("#include <stdio.h>\n\nint main(void) { \n    // YOUR CODE HERE.\n    return 0;\n}");
+					editor.setValue("#include <stdio.h>\n\nint main(void) { \n    // Warning: 'int main' is unchangeable! \n    // Otherwise it will cause Pre-Test Error.\n\n    // YOUR CODE HERE.\n    return 0;\n}");
 
 					var apiurl = "https://runcode-api2-ng.dooccn.com";
 
@@ -121,14 +121,70 @@
 					
 						code = editor.getValue();
 
+						// set the answer.
+						var answer = "Hello World!";
+
 						// TODO: processing the code.
+						var headerNum = code.search('int main');
+						if (headerNum == -1) {
+							// TODO: Run Time Error: int main missing.
+							$("#result").text("Pre-Test Error\n\nint main missing.");
+							return;
+						}
+						var header = code.slice(0, headerNum);
+
+						var bodyNum = code.slice(headerNum).search('{');
+						if (bodyNum == -1) {
+							// TODO: Run Time Error: main function parentheses missing.
+							$("#result").text("Pre-Test Error\n\nmain function parentheses missing.");
+							return;
+						}
+						var restPart = code.slice(headerNum).slice(bodyNum);
+						var pcounter = 1;
+						var currentPointer = 1;
+
+						while (pcounter) {
+							if (currentPointer == restPart.length){
+								// TODO: Run Time Error: main function parentheses missing.
+								$("#result").text("Pre-Test Error\n\nmain function parentheses missing.");
+								return;
+							}
+
+							if (restPart[currentPointer] == '{') {
+								pcounter++;
+							} else if (restPart[currentPointer] == '}') {
+								pcounter--;
+							}
+
+							currentPointer++;
+						}
+
+						var body = restPart.slice(0, currentPointer);
+						var rest = restPart.slice(currentPointer);
+
+						// Add the test code.
+
+						code = header + "\n#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/types.h>\n#include <sys/wait.h>\n#include <sys/time.h>\nvoid handle(int sig)\n{\n    if (sig == SIGCHLD)\n    {\n        int pid;\n        int status;\n        while((pid = waitpid(-1, &status, WNOHANG)) > 0){}\n    }\n}\n\nint main(int argc, char **argv)\n{\n    int timeLimit = 1000000;\n    \n    pid_t pid;\n    int status;\n    \n    float time_use=0;\n	struct timeval start;\n	struct timeval end;//struct timezone tz; \n	gettimeofday(&start,NULL); //gettimeofday(&start,&tz);\n	\n	\n    if(!(pid=fork()))\n"+
+							   body   + "    else\n    {   int ret;\n        signal(SIGCHLD, handle);\n        \n        while(1){\n            gettimeofday(&end,NULL);\n		    time_use=(end.tv_sec-start.tv_sec)*1000000+(end.tv_usec-start.tv_usec);\n		    \n		    ret = kill(pid,0);\n            if (ret == 0) { // Child process is alive.\n                \n                if(time_use>=timeLimit) { // over the time limit\n    		    	printf('Time Limit Exceeded');\n    		    	kill(pid, 6);\n                    break;\n    		    }\n                \n            } else {\n                break;\n            }		    \n        }		\n    }\n    return 0;\n}\n"+
+							   rest;
 
 						code = Base64.encode(code);
 						stdin = '';
 						runcode = 7; // C
 						$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
-							$("#result").text("output:\n"+data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'')+
-							                  "\nerrors:\n"+data.errors);
+							var result = "";
+							var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'');
+							if (data.errors) {
+								result += "Run Time Error\n\nNOTE: The line number is NOT correct (but similar)!" + data.errors;
+							} else if (output == "Time Limit Exceeded") {
+								result += "Time Limit Exceeded\n\nThe time limit is 1s.";
+							} else if (output.trim() == answer) {
+								result += "Accept\n\n";
+							} else {
+								result += "Wrong Answer\n\nExcepted: "+answer+"\nYour answer: "+output.trim();
+							}
+							// $("#result").text("output:\n"+data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'')+
+							//                   "\nerrors:\n"+data.errors);
 						});
 						setTimeout(function(){
 							btn[0].className = "primary";
