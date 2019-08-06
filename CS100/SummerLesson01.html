@@ -129,6 +129,7 @@
 						if (headerNum == -1) {
 							// TODO: Run Time Error: int main missing.
 							$("#result").text("Pre-Test Error\n\nint main missing.");
+							btn[0].className = "primary";
 							return;
 						}
 						var header = code.slice(0, headerNum);
@@ -137,6 +138,7 @@
 						if (bodyNum == -1) {
 							// TODO: Run Time Error: main function parentheses missing.
 							$("#result").text("Pre-Test Error\n\nmain function parentheses missing.");
+							btn[0].className = "primary";
 							return;
 						}
 						var restPart = code.slice(headerNum).slice(bodyNum);
@@ -147,6 +149,7 @@
 							if (currentPointer == restPart.length){
 								// TODO: Run Time Error: main function parentheses missing.
 								$("#result").text("Pre-Test Error\n\nmain function parentheses missing.");
+								btn[0].className = "primary";
 								return;
 							}
 
@@ -183,7 +186,7 @@
 							} else if (output == answer) {
 								result += "Accept\n\n";
 							} else {
-								result += "Wrong Answer\n\nExcepted: "+answer+"\nYour answer: "+output;
+								result += "Wrong Answer\n\n   Excepted: "+answer+"\nYour answer: "+output;
 							}
 							$("#result").text(result);
 							// $("#result").text("output:\n"+data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'')+
