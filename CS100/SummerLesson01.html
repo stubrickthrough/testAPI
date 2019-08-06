@@ -173,17 +173,17 @@
 						runcode = 7; // C
 						$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
 							var result = "";
-							var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'');
+							var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
 							if (output == "Compilation Failed") {
 								result += "Compile Error\n\nNOTE: The line number is NOT correct (but similar)!\n" + data.errors;
 							} else if (data.errors) {
 								result += "Run Time Error\n\nNOTE: The line number is NOT correct (but similar)!\n" + data.errors;
 							} else if (output == "Time Limit Exceeded") {
 								result += "Time Limit Exceeded\n\nThe time limit is 1s.";
-							} else if (output.trim() == answer) {
+							} else if (output == answer) {
 								result += "Accept\n\n";
 							} else {
-								result += "Wrong Answer\n\nExcepted: "+answer+"\nYour answer: "+output.trim();
+								result += "Wrong Answer\n\nExcepted: "+answer+"\nYour answer: "+output;
 							}
 							$("#result").text(result);
 							// $("#result").text("output:\n"+data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'')+
