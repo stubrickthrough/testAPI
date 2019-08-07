@@ -79,7 +79,12 @@
 								</div>
 								<!-- Break -->
 								<div class="col-12">
-									<hr class="layui-bg-red">
+									<div class="layui-progress" lay-showpercent="true" lay-filter="curProgress">
+										<div id="progressBar" class="layui-progress-bar layui-bg-red" lay-percent="10 / 10"></div>
+									</div>
+								</div>
+								<!-- Break -->
+								<div class="col-12">
 									<h3>测试结果</h3>
 									<table class="layui-hide" id="testResult"></table>
 								</div>
@@ -123,7 +128,11 @@
 					<a href="javascript:active['offset'].call('#detailButton', $('#detailButton'), {{d.detail}});" class="icon fa-search" id="detailButton"><span class="label">详情</span></a>
 				</script>
 
-				<script>						
+				<script>
+					layui.use('element', function(){
+						var $ = layui.jquery
+						,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+					})
 					//触发事件
 					var active = {
 						offset: function(othis, detailID){
@@ -173,7 +182,14 @@
 						"description": "Hello World!",
 						"input": "",
 						"answer": "Hello World!"
+					}, {
+						"id": "1002",
+						"description": "Hello World!",
+						"input": "",
+						"answer": "Hello World!"
 					}]
+					var runcode = 7; // C
+					var timeLimit = 1 * 1000000;
 
 					var detail = []
 					
@@ -310,12 +326,9 @@
 						table.addRowItem(data);				
 					}
 
-					btn = $("#submitBTN");
-					btn.click(function() {
-						btn[0].className = "primary disabled";
-					
-						code = editor.getValue();
+					// test function
 
+					function preTestProcess(code) {
 						// TODO: processing the code.
 						var headerNum = code.search('int main');
 						if (headerNum == -1) {
@@ -325,7 +338,7 @@
 										})
 							preTestError(detailID-1);
 							btn[0].className = "primary";
-							return;
+							return "Error";
 						}
 						var header = code.slice(0, headerNum);
 
@@ -337,7 +350,7 @@
 										})
 							preTestError(detailID-1);
 							btn[0].className = "primary";
-							return;
+							return "Error";
 						}
 						var restPart = code.slice(headerNum).slice(bodyNum);
 						var pcounter = 1;
@@ -351,7 +364,7 @@
 										})
 								preTestError(detailID-1);
 								btn[0].className = "primary";
-								return;
+								return "Error";
 							}
 
 							if (restPart[currentPointer] == '{') {
@@ -368,17 +381,36 @@
 
 						// Add the test code.
 
-						code = header + "\n#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/types.h>\n#include <sys/wait.h>\n#include <sys/time.h>\nvoid handle(int sig)\n{\n    if (sig == SIGCHLD)\n    {\n        int pid;\n        int status;\n        while((pid = waitpid(-1, &status, WNOHANG)) > 0){}\n    }\n}\n\nint main(int argc, char **argv)\n{\n    int timeLimit = 1000000;\n    \n    pid_t pid;\n    int status;\n    \n    float time_use=0;\n struct timeval start;\n struct timeval end;//struct timezone tz; \n gettimeofday(&start,NULL); //gettimeofday(&start,&tz);\n \n \n    if(!(pid=fork()))\n"+
+						code = header + "\n#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/types.h>\n#include <sys/wait.h>\n#include <sys/time.h>\nvoid handle(int sig)\n{\n    if (sig == SIGCHLD)\n    {\n        int pid;\n        int status;\n        while((pid = waitpid(-1, &status, WNOHANG)) > 0){}\n    }\n}\n\nint main(int argc, char **argv)\n{\n    int timeLimit = "+ timeLimit +";\n    \n    pid_t pid;\n    int status;\n    \n    float time_use=0;\n struct timeval start;\n struct timeval end;//struct timezone tz; \n gettimeofday(&start,NULL); //gettimeofday(&start,&tz);\n \n \n    if(!(pid=fork()))\n"+
 							   body   + "    else\n    {   int ret;\n        signal(SIGCHLD, handle);\n        \n        while(1){\n            gettimeofday(&end,NULL);\n      time_use=(end.tv_sec-start.tv_sec)*1000000+(end.tv_usec-start.tv_usec);\n      \n      ret = kill(pid,0);\n            if (ret == 0) { // Child process is alive.\n                \n                if(time_use>=timeLimit) { // over the time limit\n           printf(\"Time Limit Exceeded\");\n           kill(pid, 6);\n                    break;\n          }\n                \n            } else {\n                break;\n            }      \n        }  \n    }\n    return 0;\n}\n"+
 							   rest;
 
 						code = Base64.encode(code);
-						stdin = '';
-						runcode = 7; // C
+						return code;
+					}
+
+					function compileErrorTest(code, runcode) {
+						// code in Base64
+						$.post( apiurl + "/compile2", {code:code,stdin:'',language:runcode} ,function(data, error, xhr){
+							var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
+							if (output == "Compilation Failed") {
+								var detailID = detail.push({
+											"error": "NOTE: The line number is NOT correct (but similar)!<br><br>" + data.errors
+										})
+								compileError(detailID-1);
+								return "Error";
+							} 
+							return "OK";
+						});
+					}
+
+					function caseTest (code, index) {
+						// code in Base64
+						var stdin = testcases[index].input;
 						$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
 							var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
-							var answer = testcases[0].answer;
-							var id = "1001";
+							var answer = testcases[index].answer;
+							var id = testcases[index].id;
 							if (output == "Compilation Failed") {
 								var detailID = detail.push({
 											"error": "NOTE: The line number is NOT correct (but similar)!<br><br>" + data.errors
@@ -410,6 +442,24 @@
 								wrongAnswer(id, detailID-1);
 							}
 						});
+					}
+
+					btn = $("#submitBTN");
+					btn.click(function() {
+						btn[0].className = "primary disabled";
+					
+						code = editor.getValue();
+						code = preTestProcess(code);
+						if (code == "Error") {
+							return;
+						}
+						if (compileErrorTest(code, runcode) == "Error") {
+							return;
+						}
+						for (var index in testcases) {
+							caseTest(code, index);
+						}
+						
 						setTimeout(function(){
 							btn[0].className = "primary";
 						}, 10*1000);
