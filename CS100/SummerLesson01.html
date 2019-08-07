@@ -376,8 +376,9 @@
 						code = Base64.encode(code);
 						stdin = '';
 						runcode = 7; // C
+						console.log('checkpoint1');
 						$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
-							console.log('checkpoint');
+							console.log('checkpoint2');
 							var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
 							var answer = testcases[0].answer;
 							if (output == "Compilation Failed") {
