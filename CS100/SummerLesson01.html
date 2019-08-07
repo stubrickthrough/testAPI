@@ -125,7 +125,6 @@
 
 				<script>						
 					//触发事件
-					var a="";
 					var active = {
 						offset: function(othis, detailID){
 							var errorDetail = detail[detailID];
@@ -229,7 +228,7 @@
 									,"description": testcases[obj].description
 									,"time": getCurTime()
 									,"status": "Accept"
-									,"detail": "无"
+									,"detail": detailID
 								}
 								table.addRowItem(data);
 								break;
@@ -256,7 +255,7 @@
 									,"description": testcases[obj].description
 									,"time": getCurTime()
 									,"status": "Wrong Answer"
-									,"detail": "无"
+									,"detail": detailID
 								}
 								table.addRowItem(data);
 								break;
@@ -272,7 +271,7 @@
 									,"description": testcases[obj].description
 									,"time": getCurTime()
 									,"status": "Runtime Error"
-									,"detail": "无"
+									,"detail": detailID
 								}
 								table.addRowItem(data);
 								break;
@@ -288,7 +287,7 @@
 									,"description": testcases[obj].description
 									,"time": getCurTime()
 									,"status": "Time Limit Exceeded"
-									,"detail": "无"
+									,"detail": detailID
 								}
 								table.addRowItem(data);
 								break;
@@ -304,7 +303,7 @@
 									,"description": testcases[obj].description
 									,"time": getCurTime()
 									,"status": "Compile Error"
-									,"detail": "无"
+									,"detail": detailID
 								}
 								table.addRowItem(data);
 								break;
@@ -382,6 +381,7 @@
 						runcode = 7; // C
 						$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
 							var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
+							var answer = testcases[0].answer;
 							if (output == "Compilation Failed") {
 								var detailID = detail.push({
 											"error": "NOTE: The line number is NOT correct (but similar)!<br><br>" + data.errors
