@@ -317,9 +317,6 @@
 					
 						code = editor.getValue();
 
-						// set the answer.
-						var answer = "Hello World!";
-
 						// TODO: processing the code.
 						var headerNum = code.search('int main');
 						if (headerNum == -1) {
@@ -380,6 +377,7 @@
 						stdin = '';
 						runcode = 7; // C
 						$.post( apiurl + "/compile2", {code:code,stdin:stdin,language:runcode} ,function(data, error, xhr){
+							console.log('checkpoint');
 							var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
 							var answer = testcases[0].answer;
 							if (output == "Compilation Failed") {
