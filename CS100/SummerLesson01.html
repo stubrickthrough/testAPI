@@ -154,7 +154,7 @@
 								,title: '错误信息详情'
 								,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
 								,id: 'layerDemo'+'auto' //防止重复弹出
-								,content: '<div style="padding: 20px; background-color: #F2F2F2;">'+ content +'</div>'
+								,content: '<div style="padding: 20px; background-color: #F2F2F2;">'+ content.replace(/\n/g, "<br>") +'</div>'
 								,btn: '关闭'
 								,btnAlign: 'c' //按钮居中
 								,shade: 0 //不显示遮罩
