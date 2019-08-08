@@ -171,7 +171,7 @@
 							var content = "";
 
 							if (errorDetail.hasOwnProperty("id")) { // include input and expect
-								for (const obj in testcases) {
+								for (var obj in testcases) {
 									if (testcases[obj].id == errorDetail['id']) {
 										content += '<div class="layui-card"><div class="layui-card-header"><span style="color: #449D54; font-weight:bold;">输入参数</span></div><div class="layui-card-body"><pre>'+testcases[obj].input+'</pre></div></div>';
 										content += '<div class="layui-card"><div class="layui-card-header"><span style="color: #449D54; font-weight:bold;">预期答案</span></div><div class="layui-card-body"><pre>'+testcases[obj].answer+'</pre></div></div>';
