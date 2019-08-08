@@ -493,13 +493,16 @@
 						
 							code = editor.getValue();
 							code = preTestProcess(code);
+							console.log('pretest finished.')
 							if (code == "Error") {
 								setProgress(1, 1);
 								return;
 							} else {
 								setProgress(1, testcases.length+2);
 							}
+							console.log('progress set.')
 							if (compileErrorTest(code, runcode) == "Error") {
+								console.log('compile error detected.')
 								setProgress(2, 2);
 								btn[0].className = "primary";
 								return;
