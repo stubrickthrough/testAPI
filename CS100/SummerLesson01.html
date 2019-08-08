@@ -251,6 +251,7 @@
 						var apiurl = "https://runcode-api2-ng.dooccn.com";
 
 						function setProgress(numerator, denominator) {
+							element.init();
 							var percent = 100 * numerator / denominator;
 							element.progress('curProgress', percent + '%');
 						}
