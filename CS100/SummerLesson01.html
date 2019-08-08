@@ -419,37 +419,37 @@
 
 					function compileErrorTest(code, runcode) {
 						// code in Base64
-						var result = null;
-						$.ajax({ url: apiurl + "/compile2",
-									async: false,//改为同步方式 
-									type: "POST", 
-									data: { code:code,stdin:'',language:runcode }, 
-									success: function (data, error, xhr) {
-									var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
-									if (output == "Compilation Failed") {
-										var detailID = detail.push({
-													"error": "NOTE: The line number is NOT correct (but similar)!<br><br>" + data.errors
-												})
-										compileError(detailID-1);
-										result = "Error";
-									} else {
-										result = "OK";
-									}
-									} 
-						});
-						return result;
-						// $.post( apiurl + "/compile2", {code:code,stdin:'',language:runcode} ).done(function(data, error, xhr){
-						// 	var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
-						// 	if (output == "Compilation Failed") {
-						// 		var detailID = detail.push({
-						// 					"error": "NOTE: The line number is NOT correct (but similar)!<br><br>" + data.errors
-						// 				})
-						// 		compileError(detailID-1);
-						// 		return "Error";
-						// 	} else {
-						// 		return "OK";
-						// 	}
+						// var result = null;
+						// $.ajax({ url: apiurl + "/compile2",
+						// 			async: false,//改为同步方式 
+						// 			type: "POST", 
+						// 			data: { code:code,stdin:'',language:runcode }, 
+						// 			success: function (data, error, xhr) {
+						// 			var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
+						// 			if (output == "Compilation Failed") {
+						// 				var detailID = detail.push({
+						// 							"error": "NOTE: The line number is NOT correct (but similar)!<br><br>" + data.errors
+						// 						})
+						// 				compileError(detailID-1);
+						// 				result = "Error";
+						// 			} else {
+						// 				result = "OK";
+						// 			}
+						// 			} 
 						// });
+						// return result;
+						$.post( apiurl + "/compile2", {code:code,stdin:'',language:runcode} ).done(function(data, error, xhr){
+							var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
+							if (output == "Compilation Failed") {
+								var detailID = detail.push({
+											"error": "NOTE: The line number is NOT correct (but similar)!<br><br>" + data.errors
+										})
+								compileError(detailID-1);
+								return "Error";
+							} else {
+								return "OK";
+							}
+						});
 					}
 
 					function caseTest (code, index) {
