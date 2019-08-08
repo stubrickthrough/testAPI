@@ -545,8 +545,8 @@
 							if (i < testcases.length) {
 								targetCaseTest(code, i);
 							} else {
+								setStatusInfo({"status":"finished", "content":""});
 								setTimeout(function(){
-									setStatusInfo({"status":"finished", "content":""});
 									btn[0].className = "primary";
 								}, 10*1000);
 							}
@@ -582,11 +582,7 @@
 									setProgress(2, testcases.length+2);
 								}
 
-								setTimeout(function(){
-
-									targetCaseTest(code, 0);
-
-								}, timeLimit*1000);
+								targetCaseTest(code, 0);
 							}, timeLimit*1000);
 						}, 1*1000);
 					});
