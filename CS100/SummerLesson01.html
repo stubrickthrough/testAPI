@@ -150,16 +150,16 @@
 						<h3 style = "text-align:center;">运行成功！</h3>
 					{{#  if (d.content.re != 0) { }}
 						<h3 style = "text-align:center;"><span style="color: #D04051;">运行错误 Runtime Error</span></h3>
-						<h3>{{ d.content.re }}个</h3>
+						<h3 style = "text-align:center; line-height: 1;">{{ d.content.re }}个</h3>
 					{{#  } if (d.content.tle != 0) { }}
 						<h3 style = "text-align:center;"><span style="color: #D04051;">超出时间 Time Limit Exceeded</span></h3>
-						<h3>{{ d.content.tle }}个</h3>
+						<h3 style = "text-align:center; line-height: 1;">{{ d.content.tle }}个</h3>
 					{{#  } if (d.content.wa != 0) { }}
 						<h3 style = "text-align:center;"><span style="color: #D04051;">答案错误 Wrong Answer</span></h3>
-						<h3>{{ d.content.wa }}个</h3>
+						<h3 style = "text-align:center; line-height: 1;">{{ d.content.wa }}个</h3>
 					{{#  } if (d.content.ac != 0) { }}
 						<h3 style = "text-align:center;"><span style="color: #449D54;">测试通过 Accept</span></h3>
-						<h3>{{ d.content.ac }}个</h3>
+						<h3 style = "text-align:center; line-height: 1;">{{ d.content.ac }}个</h3>
 					{{#  };};} }}
 				</script>
 
@@ -236,9 +236,9 @@
 						"answer": "Hello World!"
 					}, {
 						"id": "1005",
-						"description": "Hello World!",
+						"description": "Empty",
 						"input": "",
-						"answer": "Hello World!"
+						"answer": ""
 					}]
 					var runcode = 7; // C
 					var timeLimit = 1;
