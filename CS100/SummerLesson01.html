@@ -87,8 +87,8 @@
 								<div class="col-12">
 									<fieldset class="layui-elem-field">
 										<legend>当前状态</legend>
-										<div id="curStatus" class="layui-field-box" style = "text-align:center">
-											<h3>无提交记录</h3>
+										<div id="curStatus" class="layui-field-box">
+											<h3 style = "text-align:center">无提交记录</h3>
 										</div>
 									</fieldset>
 									<table class="layui-hide" id="testResult"></table>
@@ -135,11 +135,32 @@
 
 				<script type="text/html" id="statusInfo">
 					{{#  if(d.status === 'processing'){ }}
-						<i class="layui-icon layui-icon-loading-1 layui-anim layui-anim-rotate layui-anim-loop" style="font-size: 30px;"></i>
-						<h3>{{ d.content }}</h3>
+						<div style = "text-align:center;">
+							<i class="layui-icon layui-icon-loading-1 layui-anim layui-anim-rotate layui-anim-loop" style="font-size: 30px;"></i>
+						</div>
+						<h3 style = "text-align:center;">{{ d.content }}</h3>
 					{{#  } else if(d.status === 'finished'){ }}
-						<h3>运行完成！</h3>
-					{{#  } }}
+					{{#  if (d.content.pe != 0) { }}
+						<h3 style = "text-align:center;">运行失败！</h3>
+						<h3 style = "text-align:center;"><span style="color: #AA38F5;">预检错误 Pre-Test Error</span></h3>
+					{{#  } else if(d.content.ce != 0){ }}
+						<h3 style = "text-align:center;">运行失败！</h3>
+						<h3 style = "text-align:center;"><span style="color: #e8a60b;">编译错误 Compile Error</span></h3>
+					{{#  } else { }}
+						<h3 style = "text-align:center;">运行成功！</h3>
+					{{#  if (d.content.re != 0) { }}
+						<h3 style = "text-align:center;"><span style="color: #D04051;">运行错误 Runtime Error</span></h3>
+						<h3>{{ d.content.re }}个</h3>
+					{{#  } if (d.content.tle != 0) { }}
+						<h3 style = "text-align:center;"><span style="color: #D04051;">超出时间 Time Limit Exceeded</span></h3>
+						<h3>{{ d.content.tle }}个</h3>
+					{{#  } if (d.content.wa != 0) { }}
+						<h3 style = "text-align:center;"><span style="color: #D04051;">答案错误 Wrong Answer</span></h3>
+						<h3>{{ d.content.wa }}个</h3>
+					{{#  } if (d.content.ac != 0) { }}
+						<h3 style = "text-align:center;"><span style="color: #449D54;">测试通过 Accept</span></h3>
+						<h3>{{ d.content.ac }}个</h3>
+					{{#  };};} }}
 				</script>
 
 				<script>
@@ -222,10 +243,19 @@
 					var runcode = 7; // C
 					var timeLimit = 1;
 					setProgress(1, 1);
-					var headcount = 0, bodycount = 0;
 
+					var headcount = 0, bodycount = 0;
 					var detail = []
 					var curTime = null;
+					var report = {
+						"time": "",
+						"ac": 0,
+						"wa": 0,
+						"tle": 0,
+						"re": 0,
+						"ce": 0,
+						"pe": 0
+					}
 					
 					var table = new Table({id:'testcase'});
 					table.initialize(function(tableObj){
@@ -327,9 +357,10 @@
 									,"detail": detailID
 								}
 								table.addRowItem(data);
+								report.ac++;
 								break;
 							}
-						}						
+						}
 					}
 
 					function preTestError(detailID) {
@@ -340,7 +371,8 @@
 							,"status": "Pre-Test Error"
 							,"detail": detailID
 						}
-						table.addRowItem(data);		
+						table.addRowItem(data);
+						report.pe++;
 					}
 
 					function wrongAnswer(id, detailID) {
@@ -354,9 +386,10 @@
 									,"detail": detailID
 								}
 								table.addRowItem(data);
+								report.wa++;
 								break;
 							}
-						}						
+						}
 					}
 
 					function runtimeError(id, detailID) {
@@ -370,9 +403,10 @@
 									,"detail": detailID
 								}
 								table.addRowItem(data);
+								report.re++;
 								break;
 							}
-						}						
+						}
 					}
 
 					function timeLimitExceeded(id, detailID) {
@@ -386,9 +420,10 @@
 									,"detail": detailID
 								}
 								table.addRowItem(data);
+								report.tle++;
 								break;
 							}
-						}						
+						}
 					}
 
 					function compileError(detailID) {
@@ -399,7 +434,8 @@
 							,"status": "Compile Error"
 							,"detail": detailID
 						}
-						table.addRowItem(data);				
+						table.addRowItem(data);
+						report.ce++;		
 					}
 
 					// test function
@@ -413,7 +449,6 @@
 											"error": "'int main' missing.<br>'int main'缺失。"
 										})
 							preTestError(detailID-1);
-							btn[0].className = "primary";
 							return "Error";
 						}
 						var header = code.slice(0, headerNum);
@@ -426,7 +461,6 @@
 											"error": "main function parentheses missing.<br>main函数左括号'{'缺失。"
 										})
 							preTestError(detailID-1);
-							btn[0].className = "primary";
 							return "Error";
 						}
 						var restPart = code.slice(headerNum).slice(bodyNum);
@@ -440,7 +474,6 @@
 											"error": "main function parentheses missing.<br>main函数右括号'}'缺失。"
 										})
 								preTestError(detailID-1);
-								btn[0].className = "primary";
 								return "Error";
 							}
 
@@ -545,7 +578,7 @@
 							if (i < testcases.length) {
 								targetCaseTest(code, i);
 							} else {
-								setStatusInfo({"status":"finished", "content":""});
+								setStatusInfo({"status":"finished", "content":report});
 								setTimeout(function(){
 									btn[0].className = "primary";
 								}, 10*1000);
@@ -557,6 +590,15 @@
 					btn.click(function() {
 						btn[0].className = "primary disabled";
 						curTime = getCurTime();
+						report = {
+							"time": curTime,
+							"ac": 0,
+							"wa": 0,
+							"tle": 0,
+							"re": 0,
+							"ce": 0,
+							"pe": 0
+						}
 
 						setProgress(0, testcases.length+2);
 						setStatusInfo({"status":"processing", "content":"正在进行：预先检查..."});
@@ -567,16 +609,19 @@
 							code = preTestProcess(code);
 							if (code == "Error") {
 								setProgress(1, 1);
+								btn[0].className = "primary";
+								setStatusInfo({"status":"finished", "content":report});
 								return;
 							} else {
 								setProgress(1, testcases.length+2);
+								setStatusInfo({"status":"processing", "content":"正在进行：编译..."});
 							}
-							setStatusInfo({"status":"processing", "content":"正在进行：编译..."});
 
 							setTimeout(function(){
 								if (compileErrorTest(code, runcode) != "OK") {
 									setProgress(2, 2);
 									btn[0].className = "primary";
+									setStatusInfo({"status":"finished", "content":report});
 									return;
 								} else {
 									setProgress(2, testcases.length+2);
