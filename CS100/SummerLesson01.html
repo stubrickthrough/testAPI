@@ -177,6 +177,8 @@
 						var $ = layui.jquery
 						,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
 
+						$.ajaxSetup({async: false});
+
 						var testcases = [{
 							"id": "1001",
 							"description": "Hello World!",
@@ -405,8 +407,9 @@
 											})
 									compileError(detailID-1);
 									return "Error";
-								} 
-								return "OK";
+								} else {
+									return "OK";
+								}
 							});
 						}
 
@@ -455,33 +458,31 @@
 							btn[0].className = "primary disabled";
 
 							setProgress(0, testcases.length+2);
-							setTimeout(function(){
 						
-								code = editor.getValue();
-								code = preTestProcess(code);
-								if (code == "Error") {
-									setProgress(1, 1);
-									return;
-								} else {
-									setProgress(1, testcases.length+2);
-								}
-								if (compileErrorTest(code, runcode) == "Error") {
-									setProgress(2, 2);
-									return;
-								} else {
-									setProgress(2, testcases.length+2);
-								}
-								var i = 0;
-								for (var index in testcases) {
-									caseTest(code, index);
-									setProgress(i+3, testcases.length+2);
-									i++;
-								}
-								
-								setTimeout(function(){
-									btn[0].className = "primary";
-								}, 10*1000);
-							}, 1*1000);
+							code = editor.getValue();
+							code = preTestProcess(code);
+							if (code == "Error") {
+								setProgress(1, 1);
+								return;
+							} else {
+								setProgress(1, testcases.length+2);
+							}
+							if (compileErrorTest(code, runcode) == "Error") {
+								setProgress(2, 2);
+								return;
+							} else {
+								setProgress(2, testcases.length+2);
+							}
+							var i = 0;
+							for (var index in testcases) {
+								caseTest(code, index);
+								setProgress(i+3, testcases.length+2);
+								i++;
+							}
+							
+							setTimeout(function(){
+								btn[0].className = "primary";
+							}, 10*1000);
 						});
 					})
 				</script>
