@@ -530,7 +530,7 @@
 						$.ajax({    url: apiurl + "/compile2",
 									async: false,//改为同步方式 
 									type: "POST", 
-									data: { code:code,stdin:'',language:runcode }, 
+									data: { code:code,stdin:stdin,language:runcode }, 
 									success: function (data, error, xhr) {
 										var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
 										var answer = testcases[index].answer;
