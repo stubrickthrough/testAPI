@@ -399,10 +399,11 @@
 
 						function compileErrorTest(code, runcode) {
 							// code in Base64
-							var output = null;
-							$.post( apiurl + "/compile2", {code:code,stdin:'',language:runcode} ,function(data, error, xhr){
-								output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
+							var data = null;
+							$.post( apiurl + "/compile2", {code:code,stdin:'',language:runcode} ,function(newdata, error, xhr){
+								data = newdata;
 							});
+							var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
 							if (output == "Compilation Failed") {
 								var detailID = detail.push({
 											"error": "NOTE: The line number is NOT correct (but similar)!<br><br>" + data.errors
