@@ -209,6 +209,7 @@
 					setProgress(1, 1);						
 
 					var detail = []
+					var curTime = null;
 					
 					var table = new Table({id:'testcase'});
 					table.initialize(function(tableObj){
@@ -279,7 +280,7 @@
 								var data = {
 									"id": id
 									,"description": testcases[obj].description
-									,"time": getCurTime()
+									,"time": curTime
 									,"status": "Accept"
 									,"detail": detailID
 								}
@@ -293,7 +294,7 @@
 						var data = {
 							"id": '----'
 							,"description": "'int main' is unchangeable and should be put at the beginning!"
-							,"time": getCurTime()
+							,"time": curTime
 							,"status": "Pre-Test Error"
 							,"detail": detailID
 						}
@@ -306,7 +307,7 @@
 								var data = {
 									"id": id
 									,"description": testcases[obj].description
-									,"time": getCurTime()
+									,"time": curTime
 									,"status": "Wrong Answer"
 									,"detail": detailID
 								}
@@ -322,7 +323,7 @@
 								var data = {
 									"id": id
 									,"description": testcases[obj].description
-									,"time": getCurTime()
+									,"time": curTime
 									,"status": "Runtime Error"
 									,"detail": detailID
 								}
@@ -338,7 +339,7 @@
 								var data = {
 									"id": id
 									,"description": testcases[obj].description
-									,"time": getCurTime()
+									,"time": curTime
 									,"status": "Time Limit Exceeded"
 									,"detail": detailID
 								}
@@ -352,7 +353,7 @@
 						var data = {
 							"id": "----"
 							,"description": "Compile Error"
-							,"time": getCurTime()
+							,"time": curTime
 							,"status": "Compile Error"
 							,"detail": detailID
 						}
@@ -509,6 +510,7 @@
 					btn = $("#submitBTN");
 					btn.click(function() {
 						btn[0].className = "primary disabled";
+						curTime = getCurTime();
 
 						setProgress(0, testcases.length+2);
 
