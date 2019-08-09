@@ -340,6 +340,8 @@ function caseTest (code, index) {
                 success: function (data, error, xhr) {
                     var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
                     var answer = testcases[index].answer;
+                    console.log(output.slice(0,100));
+                    console.log(answer.slice(0,100));
                     var id = testcases[index].id;
                     if (output == "Compilation Failed") {
                         var detailID = detail.push({
