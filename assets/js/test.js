@@ -358,7 +358,7 @@ function caseTest (code, index) {
                                     "error": "The time limit is 1s."
                                 })
                         timeLimitExceeded(id, detailID-1);
-                    } else if (output == answer) {
+                    } else if (output.replace(/\\r\\n/g, '\n').replace(/\\r/g, '\n') == answer) {
                         var detailID = detail.push({
                                     "id": id,
                                     "ac": output
