@@ -7,7 +7,7 @@ layui.use(['layer', 'element'], function(){
 var active = {
     offset: function(othis, detailID){
         var errorDetail = detail[detailID];
-        var content = "<div style='overflow: auto;'>";
+        var content = "";
 
         if (errorDetail.hasOwnProperty("id")) { // include input and expect
             for (var obj in testcases) {
@@ -27,12 +27,11 @@ var active = {
         if (errorDetail.hasOwnProperty("ac")) { // include error
             content += '<div class="layui-card"><div class="layui-card-header"><span style="color: #449D54; font-weight:bold;">你的答案</span></div><div class="layui-card-body"><pre>'+errorDetail['ac']+'</pre></div></div>';
         }
-
-        content += "</div>";
         
         layer.open({
             type: 1
             ,area:["600px"]
+            ,maxHeight:"90%"
             ,title: '错误信息详情'
             ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
             ,id: 'layerDemo'+'auto' //防止重复弹出
