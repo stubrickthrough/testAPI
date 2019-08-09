@@ -360,7 +360,7 @@ function caseTest (code, index) {
                                     "error": "The time limit is 1s."
                                 })
                         timeLimitExceeded(id, detailID-1);
-                    } else if (output.replace(/\\r\\n/g, '\n').replace(/\\r/g, '\n').replace(/\\n/g, '\n') == answer.replace(/\\n/g, '\n')) {
+                    } else if (output.trim() == answer.trim()) {
                         var detailID = detail.push({
                                     "id": id,
                                     "ac": output
