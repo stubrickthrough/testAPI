@@ -309,7 +309,7 @@ function compileErrorTest(code, runcode) {
     $.ajax({    url: apiurl + "/compile2",
                 async: false,//改为同步方式 
                 type: "POST", 
-                data: { code:code,stdin:'',language:runcode }, 
+                data: { code:code,stdin:compileInput,language:runcode }, 
                 success: function (data, error, xhr) {
                     var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
                     if (output == "Compilation Failed") {
@@ -339,7 +339,7 @@ function caseTest (code, index) {
                 data: { code:code,stdin:stdin,language:runcode }, 
                 success: function (data, error, xhr) {
                     var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
-                    var answer = testcases[index].answer;
+                    var answer = testcases[index].answer.trim();
                     console.log(output);
                     console.log(answer);
                     var id = testcases[index].id;
@@ -354,13 +354,13 @@ function caseTest (code, index) {
                                     "error": data.errors.replace(/\/usercode\/file.cpp:\d{1,}/g,stringConvert)
                                 })
                         runtimeError(id, detailID-1);
-                    } else if (output == "Time Limit Exceeded") {
+                    } else if (output == "Time Limit Exceeded" || output == "Execution Timed Out") {
                         var detailID = detail.push({
                                     "id": id,
                                     "error": "The time limit is 1s."
                                 })
                         timeLimitExceeded(id, detailID-1);
-                    } else if (output.trim() == answer.trim()) {
+                    } else if (output == answer) {
                         var detailID = detail.push({
                                     "id": id,
                                     "ac": output
