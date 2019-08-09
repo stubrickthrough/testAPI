@@ -338,7 +338,6 @@ function caseTest (code, index) {
 
     setTimeout(function(){
         $.ajax({    url: apiurl + "/compile2",
-                    async: true, 
                     type: "POST", 
                     data: { code:code,stdin:stdin,language:runcode }, 
                     success: function (data, error, xhr) {
@@ -376,7 +375,6 @@ function caseTest (code, index) {
                             wrongAnswer(id, detailID-1);
                         }
 
-                        caseTest(code, index);
                         index++;
                         setProgress(index+2, testcases.length+2);
                         if (index < testcases.length) {
@@ -389,22 +387,5 @@ function caseTest (code, index) {
                         }
                     } 
         });
-    }, timeLimit*1000);
-}
-
-function targetCaseTest(code, i) {
-    setStatusInfo({"status":"processing", "content":"正在进行：样例测试  ID:"+testcases[i].id+"..."});
-    setTimeout(function(){
-        caseTest(code, i);
-        i++;
-        setProgress(i+2, testcases.length+2);
-        if (i < testcases.length) {
-            targetCaseTest(code, i);
-        } else {
-            setStatusInfo({"status":"finished", "content":report});
-            setTimeout(function(){
-                btn[0].className = "primary";
-            }, 10*1000);
-        }
     }, timeLimit*1000);
 }
