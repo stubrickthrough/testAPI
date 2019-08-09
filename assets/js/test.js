@@ -149,6 +149,8 @@ function setStatusInfo(data) {
     });
 }
 
+// Add row function.
+
 function accept(id, detailID) {
     for (var obj in testcases) {
         if (testcases[obj].id == id) {
@@ -332,47 +334,62 @@ function compileErrorTest(code, runcode) {
 function caseTest (code, index) {
     // code in Base64
     var stdin = testcases[index].input;
+    setStatusInfo({"status":"processing", "content":"正在进行：样例测试  ID:"+testcases[index].id+"..."});
 
-    $.ajax({    url: apiurl + "/compile2",
-                async: false,//改为同步方式 
-                type: "POST", 
-                data: { code:code,stdin:stdin,language:runcode }, 
-                success: function (data, error, xhr) {
-                    var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
-                    var answer = testcases[index].answer.trim();
-                    var id = testcases[index].id;
-                    if (output == "Compilation Failed") {
-                        var detailID = detail.push({
-                                    "error": data.errors.replace(/\/usercode\/file.cpp:\d{1,}/g,stringConvert)
-                                })
-                        compileError(detailID-1);
-                    } else if (data.errors) {
-                        var detailID = detail.push({
-                                    "id": id,
-                                    "error": data.errors.replace(/\/usercode\/file.cpp:\d{1,}/g,stringConvert)
-                                })
-                        runtimeError(id, detailID-1);
-                    } else if (output == "Time Limit Exceeded" || output == "Execution Timed Out") {
-                        var detailID = detail.push({
-                                    "id": id,
-                                    "error": "The time limit is 1s."
-                                })
-                        timeLimitExceeded(id, detailID-1);
-                    } else if (output == answer) {
-                        var detailID = detail.push({
-                                    "id": id,
-                                    "ac": output
-                                })
-                        accept(id, detailID-1);
-                    } else {
-                        var detailID = detail.push({
-                                    "id": id,
-                                    "wa": output
-                                })
-                        wrongAnswer(id, detailID-1);
-                    }
-                } 
-    });
+    setTimeout(function(){
+        $.ajax({    url: apiurl + "/compile2",
+                    async: true, 
+                    type: "POST", 
+                    data: { code:code,stdin:stdin,language:runcode }, 
+                    success: function (data, error, xhr) {
+                        var output = data.output.replace("\r\n\r\n官方网站:http://www.dooccn.com",'').trim();
+                        var answer = testcases[index].answer.trim();
+                        var id = testcases[index].id;
+                        if (output == "Compilation Failed") {
+                            var detailID = detail.push({
+                                        "error": data.errors.replace(/\/usercode\/file.cpp:\d{1,}/g,stringConvert)
+                                    })
+                            compileError(detailID-1);
+                        } else if (data.errors) {
+                            var detailID = detail.push({
+                                        "id": id,
+                                        "error": data.errors.replace(/\/usercode\/file.cpp:\d{1,}/g,stringConvert)
+                                    })
+                            runtimeError(id, detailID-1);
+                        } else if (output == "Time Limit Exceeded" || output == "Execution Timed Out") {
+                            var detailID = detail.push({
+                                        "id": id,
+                                        "error": "The time limit is 1s."
+                                    })
+                            timeLimitExceeded(id, detailID-1);
+                        } else if (output == answer) {
+                            var detailID = detail.push({
+                                        "id": id,
+                                        "ac": output
+                                    })
+                            accept(id, detailID-1);
+                        } else {
+                            var detailID = detail.push({
+                                        "id": id,
+                                        "wa": output
+                                    })
+                            wrongAnswer(id, detailID-1);
+                        }
+
+                        caseTest(code, index);
+                        index++;
+                        setProgress(index+2, testcases.length+2);
+                        if (index < testcases.length) {
+                            caseTest(code, index);
+                        } else {
+                            setStatusInfo({"status":"finished", "content":report});
+                            setTimeout(function(){
+                                btn[0].className = "primary";
+                            }, 10*1000);
+                        }
+                    } 
+        });
+    }, timeLimit*1000);
 }
 
 function targetCaseTest(code, i) {
