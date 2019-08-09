@@ -30,7 +30,7 @@ var active = {
         
         layer.open({
             type: 1
-            ,area:["600px"]
+            ,area:"600px"
             ,maxHeight:441
             ,title: '错误信息详情'
             ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
