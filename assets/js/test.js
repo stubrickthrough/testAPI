@@ -7,7 +7,7 @@ layui.use(['layer', 'element'], function(){
 var active = {
     offset: function(othis, detailID){
         var errorDetail = detail[detailID];
-        var content = "";
+        var content = "<div style='overflow: auto;'>";
 
         if (errorDetail.hasOwnProperty("id")) { // include input and expect
             for (var obj in testcases) {
@@ -27,6 +27,8 @@ var active = {
         if (errorDetail.hasOwnProperty("ac")) { // include error
             content += '<div class="layui-card"><div class="layui-card-header"><span style="color: #449D54; font-weight:bold;">你的答案</span></div><div class="layui-card-body"><pre>'+errorDetail['ac']+'</pre></div></div>';
         }
+
+        content += "</div>";
         
         layer.open({
             type: 1
