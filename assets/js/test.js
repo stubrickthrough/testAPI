@@ -72,6 +72,7 @@ table.initialize(function(tableObj){
 // 	//默认更新完的回调
 // });
 
+setProgress(1, 1);
 var headcount = 0, bodycount = 0;
 var detail = []
 var curTime = null;
@@ -307,9 +308,7 @@ function preTestProcess(code) {
 
 function compileErrorTest(code, runcode) {
     // code in Base64
-    var result = null;
     $.ajax({    url: apiurl + "/compile2",
-                async: false,//改为同步方式 
                 type: "POST", 
                 data: { code:code,stdin:compileInput,language:runcode }, 
                 success: function (data, error, xhr) {
@@ -319,16 +318,20 @@ function compileErrorTest(code, runcode) {
                                     "error": data.errors.replace(/\/usercode\/file.cpp:\d{1,}/g,stringConvert)
                                 })
                         compileError(detailID-1);
-                        result = "Error";
+                        setProgress(2, 2);
+                        btn[0].className = "primary";
+                        setStatusInfo({"status":"finished", "content":report});
                     } else {
-                        result = "OK";
+                        setProgress(2, testcases.length+2);
+                        caseTest(code, 0);
                     }
                 },
                 error: function (error) {
-                    result = error.statusText;
+                    setProgress(2, 2);
+                    btn[0].className = "primary";
+                    setStatusInfo({"status":"error", "content":error.statusText});
                 } 
     });
-    return result;
 }
 
 function caseTest (code, index) {
@@ -389,3 +392,34 @@ function caseTest (code, index) {
         });
     }, timeLimit*1000);
 }
+
+btn = $("#submitBTN");
+btn.click(function() {
+    btn[0].className = "primary disabled";
+    curTime = getCurTime();
+    report = {
+        "time": curTime, "ac": 0, "wa": 0, "tle": 0, "re": 0, "ce": 0, "pe": 0
+    }
+
+    setProgress(0, testcases.length+2);
+    setStatusInfo({"status":"processing", "content":"正在进行：预先检查..."});
+
+    setTimeout(function(){
+
+        code = editor.getValue();
+        code = preTestProcess(code);
+        if (code == "Error") {
+            setProgress(1, 1);
+            btn[0].className = "primary";
+            setStatusInfo({"status":"finished", "content":report});
+            return;
+        } else {
+            setProgress(1, testcases.length+2);
+            setStatusInfo({"status":"processing", "content":"正在进行：编译..."});
+        }
+
+        setTimeout(function(){
+            compileErrorTest(code, runcode);
+        }, timeLimit*1000);
+    }, 1*1000);
+});

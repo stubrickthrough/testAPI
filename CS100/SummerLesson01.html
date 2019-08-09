@@ -194,53 +194,6 @@
 					var compileInput = "5 + 6\nn";
 					var runcode = 7; // C
 					var timeLimit = 1;
-					setProgress(1, 1);
-
-					btn = $("#submitBTN");
-					btn.click(function() {
-						btn[0].className = "primary disabled";
-						curTime = getCurTime();
-						report = {
-							"time": curTime, "ac": 0, "wa": 0, "tle": 0, "re": 0, "ce": 0, "pe": 0
-						}
-
-						setProgress(0, testcases.length+2);
-						setStatusInfo({"status":"processing", "content":"正在进行：预先检查..."});
-
-						setTimeout(function(){
-					
-							code = editor.getValue();
-							code = preTestProcess(code);
-							if (code == "Error") {
-								setProgress(1, 1);
-								btn[0].className = "primary";
-								setStatusInfo({"status":"finished", "content":report});
-								return;
-							} else {
-								setProgress(1, testcases.length+2);
-								setStatusInfo({"status":"processing", "content":"正在进行：编译..."});
-							}
-
-							setTimeout(function(){
-								var APIresponse = compileErrorTest(code, runcode);
-								if (APIresponse == "OK"){
-									setProgress(2, testcases.length+2);
-								} else if (APIresponse == "Error") {
-									setProgress(2, 2);
-									btn[0].className = "primary";
-									setStatusInfo({"status":"finished", "content":report});
-									return;
-								} else {
-									setProgress(2, 2);
-									btn[0].className = "primary";
-									setStatusInfo({"status":"error", "content":APIresponse});
-									return;
-								}
-
-								caseTest(code, 0);
-							}, timeLimit*1000);
-						}, 1*1000);
-					});
 				</script>
 			</section>
 		
