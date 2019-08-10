@@ -177,6 +177,7 @@ testcaseList.initialize(function(tableObj){
         ,data: []
         ,cols: [col]
         ,page: { layout: ['prev', 'page', 'next', 'count'] }
+        ,initSort: {field:'id', type:'asc'}
         ,limit: 5
     }
     testcaseList.rederTable(ops,function () {
