@@ -148,7 +148,13 @@ function getCheckData(){ //获取选中数据
 
         var checkStatus = table.checkStatus('testcaseList')
         ,data = checkStatus.data;
-        testcases = data;
+        if (data.length == 0) {
+            layui.alert('请至少选择1个测试用例！');
+            return false;
+        } else {
+            testcases = data;
+            return true;
+        }
     });
 }
 
@@ -594,7 +600,10 @@ btn.click(function() {
         "time": curTime, "ac": 0, "wa": 0, "tle": 0, "re": 0, "ce": 0, "pe": 0
     }
 
-    getCheckData();
+    if (!getCheckData()) {
+        btn[0].className = "primary";
+        return;
+    };
 
     setProgress(0, testcases.length+2);
     setStatusInfo({"status":"processing", "content":"正在进行：预先检查..."});
