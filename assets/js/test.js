@@ -149,7 +149,6 @@ function getCheckData(){ //获取选中数据
 
         var checkStatus = table.checkStatus('testcaseList')
         ,data = checkStatus.data;
-        console.log(data);
         if (data.length == 0) {
             layer.alert('请至少选择1个测试用例！');
             result = false;
