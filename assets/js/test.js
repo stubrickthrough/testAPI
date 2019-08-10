@@ -38,7 +38,7 @@ var active = {
             ,content: '<div style="padding: 20px; background-color: #F2F2F2;">'+ content.replace(/\n/g, "<br>") +'</div>'
             ,btn: '关闭'
             ,btnAlign: 'c' //按钮居中
-            ,shade: 0 //不显示遮罩
+            ,shade: 0.4
             ,yes: function(){
                 layer.closeAll();
             }
@@ -50,7 +50,7 @@ var table = new Table({id:'testcase'});
 table.initialize(function(tableObj){
     var col = [ //标题栏
             {field: 'id', title: 'ID', width: 80, sort: true}
-            ,{field: 'description', title: '测试用例', minWidth: 120}
+            ,{field: 'description', title: '测试用例描述', minWidth: 120}
             ,{field: 'status', title: '状态', width: 250, templet: '#statusTpl', sort: true}
             ,{field: 'time', title: '提交时间', width: 160, sort: true}
             ,{field: 'detail', title: '详情', templet: '#detailTpl', width: 80, align:'center'}
@@ -66,6 +66,199 @@ table.initialize(function(tableObj){
     table.rederTable(ops,function () {
         });					
 })
+
+layui.use(['form', 'table'], function(){
+    var table = layui.table
+    ,form = layui.form;
+    //监听工具条
+    table.on('tool(testcaseList)', function(obj){
+      var data = obj.data;
+      if(obj.event === 'del'){
+        layer.confirm('确认删除？', function(index){
+          testcaseList.deleteRowItem(data.id);
+          obj.del();
+          layer.close(index);
+        });
+      } else if(obj.event === 'edit'){
+        //layer.alert('编辑行：<br>'+ JSON.stringify(data))
+        var content = ' <form class="layui-form" action="">'+
+        '                   <div class="layui-form-item">'+
+        '                       <label class="layui-form-label">ID</label>'+
+        '                       <div class="layui-input-block">'+
+        '                       <input disabled="" name="id" lay-verify="title" autocomplete="off" placeholder="ID" class="layui-input" value='+data.id+'>'+
+        '                       </div>'+
+        '                   </div>'+
+        '                   <div class="layui-form-item layui-form-text">'+
+        '                       <label class="layui-form-label">测试样例描述</label>'+
+        '                       <div class="layui-input-block">'+
+        '                       <textarea placeholder="请输入测试样例描述" class="layui-textarea" name="description">'+data.description+'</textarea>'+
+        '                       </div>'+
+        '                   </div>'+
+        '                   <div class="layui-form-item layui-form-text">'+
+        '                       <label class="layui-form-label">输入<br>参数</label>'+
+        '                       <div class="layui-input-block">'+
+        '                       <textarea placeholder="请输入输入参数" class="layui-textarea" name="input">'+data.input+'</textarea>'+
+        '                       </div>'+
+        '                   </div>'+
+        '                   <div class="layui-form-item layui-form-text">'+
+        '                       <label class="layui-form-label">预期<br>答案</label>'+
+        '                       <div class="layui-input-block">'+
+        '                       <textarea placeholder="请输入预期答案" class="layui-textarea" name="answer">'+data.answer+'</textarea>'+
+        '                       </div>'+
+        '                   </div>'+
+        '                   <div class="layui-form-item">'+
+        '                       <div class="layui-input-block">'+
+        '                       <button class="primary small" lay-submit="" lay-filter="submitEdit">修改</button>'+
+        '                       <button type="reset" class="small">重置</button>'+
+        '                       <button class="small" lay-submit="" lay-filter="cancel">取消</button>'+
+        '                       </div>'+
+        '                   </div>'+
+        '               </form>';
+        layer.open({
+            type: 1
+            ,area:"600px"
+            ,maxHeight:500
+            ,title: '编辑测试用例'
+            ,offset: 'auto'
+            ,id: 'layerDemo'+'auto' //防止重复弹出
+            ,content: '<div style="padding: 20px; background-color: #F2F2F2;">'+ content +'</div>'
+            ,shade: 0.4
+            ,yes: function(){
+                layer.closeAll();
+            }
+        });
+        form.on('submit(submitEdit)', function(data){
+            layer.confirm('确认修改？', function(index){
+                obj.update(data.field);
+                layer.closeAll();
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        form.on('submit(cancel)', function(data){
+            layer.closeAll();
+            return false;
+        });
+      }
+    });
+});
+
+function getCheckData(){ //获取选中数据
+    layui.use('table', function(){
+        var table = layui.table;
+
+        var checkStatus = table.checkStatus('testcaseList')
+        ,data = checkStatus.data;
+        testcases = data;
+    });
+}
+
+var testcaseList = new Table({id:'testcaseList'});
+testcaseList.initialize(function(tableObj){
+    var col = [ //标题栏
+            {type:'checkbox',LAY_CHECKED:true}
+            ,{field: 'id', title: 'ID', width: 80, sort: true}
+            ,{field: 'description', title: '测试用例描述', minWidth: 120}
+            ,{field: 'input', title: '输入参数', minWidth: 120}
+            ,{field: 'answer', title: '预期答案', minWidth: 160}
+            ,{width:110, align:'center', toolbar: '#operate'}
+            ]
+    var ops = {
+        elem: '#testcaseList'//自定义dom
+        ,id:'testcaseList'
+        ,data: []
+        ,cols: [col]
+        ,page: { layout: ['prev', 'page', 'next', 'count'] }
+        ,limit: 5
+    }
+    testcaseList.rederTable(ops,function () {
+        testcases.forEach(element => {
+            testcaseList.addRowItem(element);
+        });
+    });		
+})
+
+$('#addTestcase').click(function(){
+    layui.use(['form', 'table'], function(){
+        var table = layui.table
+        ,form = layui.form;
+        var content = ' <form class="layui-form" action="">'+
+        '                   <div class="layui-form-item">'+
+        '                       <label class="layui-form-label">ID</label>'+
+        '                       <div class="layui-input-block">'+
+        '                       <input name="id" lay-verify="title" autocomplete="off" placeholder="请输入样例ID" class="layui-input">'+
+        '                       </div>'+
+        '                   </div>'+
+        '                   <div class="layui-form-item layui-form-text">'+
+        '                       <label class="layui-form-label">测试样例描述</label>'+
+        '                       <div class="layui-input-block">'+
+        '                       <textarea placeholder="请输入测试样例描述" class="layui-textarea" name="description"></textarea>'+
+        '                       </div>'+
+        '                   </div>'+
+        '                   <div class="layui-form-item layui-form-text">'+
+        '                       <label class="layui-form-label">输入<br>参数</label>'+
+        '                       <div class="layui-input-block">'+
+        '                       <textarea placeholder="请输入输入参数" class="layui-textarea" name="input"></textarea>'+
+        '                       </div>'+
+        '                   </div>'+
+        '                   <div class="layui-form-item layui-form-text">'+
+        '                       <label class="layui-form-label">预期<br>答案</label>'+
+        '                       <div class="layui-input-block">'+
+        '                       <textarea placeholder="请输入预期答案" class="layui-textarea" name="answer"></textarea>'+
+        '                       </div>'+
+        '                   </div>'+
+        '                   <div class="layui-form-item">'+
+        '                       <div class="layui-input-block">'+
+        '                       <button class="primary small" lay-submit="" lay-filter="submitAdd">添加</button>'+
+        '                       <button class="small" lay-submit="" lay-filter="cancel">取消</button>'+
+        '                       </div>'+
+        '                   </div>'+
+        '               </form>';
+        layer.open({
+            type: 1
+            ,area:"600px"
+            ,maxHeight:500
+            ,title: '添加测试用例'
+            ,offset: 'auto'
+            ,id: 'layerDemo'+'auto' //防止重复弹出
+            ,content: '<div style="padding: 20px; background-color: #F2F2F2;">'+ content +'</div>'
+            ,shade: 0.4
+            ,yes: function(){
+                layer.closeAll();
+            }
+        });
+        form.on('submit(submitAdd)', function(data){
+            var testcaseListArray = layui.table.cache.testcaseList;
+            var unqualify = false;
+            testcaseListArray.forEach(element => {
+                if (element.id == data.field.id) {
+                    layer.alert('样例ID已经被使用过！请更换一个后重试。');
+                    unqualify = true;
+                }
+            });
+            if (!unqualify) {
+                var reg = /\d{4}/g;
+                if (!reg.test(data.field.id)) {
+                    layer.alert('样例ID必须是4位数字！请更换一个后重试。');
+                    unqualify = true;
+                } else if (data.field.description == "") {
+                    layer.alert('样例描述必须非空！请填写后重试。');
+                    unqualify = true;
+                }
+            }            
+            if (!unqualify) {
+                layer.confirm('确认添加？', function(index){
+                    testcaseList.addRowItem(data.field);
+                    layer.closeAll();
+                });
+            }            
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        form.on('submit(cancel)', function(data){
+            layer.closeAll();
+            return false;
+        });
+    });
+});
 
 // //data为行数据json
 // table.updateRowItem(data,"id",function(data){
@@ -400,6 +593,8 @@ btn.click(function() {
     report = {
         "time": curTime, "ac": 0, "wa": 0, "tle": 0, "re": 0, "ce": 0, "pe": 0
     }
+
+    getCheckData();
 
     setProgress(0, testcases.length+2);
     setStatusInfo({"status":"processing", "content":"正在进行：预先检查..."});

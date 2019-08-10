@@ -70,11 +70,13 @@
 									<div class="codearea">
 										<textarea name="textarea" id="textareaCode" rows="6"></textarea>
 									</div>
+									<table class="layui-hide" id="testcaseList" lay-filter="testcaseList"></table>
 								</div>
 								<!-- Break -->
 								<div class="col-12">
 									<ul class="actions">
 										<li><input type="submit" value="提交代码" class="primary" id="submitBTN" /></li>
+										<li><button id="addTestcase">添加自定义测试用例</button></li>
 									</ul>
 								</div>
 								<!-- Break -->
@@ -133,6 +135,11 @@
 
 				<script type="text/html" id="detailTpl">
 					<a href="javascript:active['offset'].call('#detailButton', $('#detailButton'), {{d.detail}});" class="icon fa-search" id="detailButton"><span class="label">详情</span></a>
+				</script>
+
+				<script type="text/html" id="operate">
+					<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+					<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 				</script>
 
 				<script type="text/html" id="statusInfo">
