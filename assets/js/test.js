@@ -143,19 +143,22 @@ layui.use(['form', 'table'], function(){
 });
 
 function getCheckData(){ //获取选中数据
+    var result;
     layui.use('table', function(){
         var table = layui.table;
 
         var checkStatus = table.checkStatus('testcaseList')
         ,data = checkStatus.data;
+        console.log(data);
         if (data.length == 0) {
-            layui.alert('请至少选择1个测试用例！');
-            return false;
+            layer.alert('请至少选择1个测试用例！');
+            result = false;
         } else {
             testcases = data;
-            return true;
+            result = true;
         }
     });
+    return result;
 }
 
 var testcaseList = new Table({id:'testcaseList'});
