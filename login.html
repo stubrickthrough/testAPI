@@ -144,10 +144,13 @@
 				var GITHUB_CLIENT_ID = "55c417c86c93e9db8092";
 				var GITHUB_CLIENT_SECRET = "792a62e20fd60bc956919165407240ed2206cdb4";
 				var GITHUB_REDIRECT_URL = "https://stubrickthrough.github.io/testAPI/login";
-				var param = "client_id=" + GITHUB_CLIENT_ID + "&state=" + state +
-					"&redirect_uri=" + GITHUB_REDIRECT_URL + "&code=" + code +
-					"&client_secret=" + GITHUB_CLIENT_SECRET;
-				window.location.href = url + "?" + param;
+				// var param = "client_id=" + GITHUB_CLIENT_ID + "&state=" + state +
+				// 	"&redirect_uri=" + GITHUB_REDIRECT_URL + "&code=" + code +
+				// 	"&client_secret=" + GITHUB_CLIENT_SECRET;
+				// window.location.href = url + "?" + param;
+				$.post(url,{"client_id": GITHUB_CLIENT_ID, "state": state, "redirect_uri":GITHUB_REDIRECT_URL, "code": code, "client_secret": GITHUB_CLIENT_SECRET}, function(data){
+					console.log(data);
+				})
 			}
 		} else {
 			console.log(getQueryString('access_token'));
