@@ -133,29 +133,39 @@
 			return null;
 		}
 
-		if (getQueryString('code') != null) {
-			if (getQueryString('state') != 'ac') {
-				$('#info').text('可能遭到CSRF攻击！');
-			} else {
-
-				var state = getQueryString('state');
-				var url = "https://github.com/login/oauth/access_token";
-				var code = getQueryString('code');
-				var GITHUB_CLIENT_ID = "55c417c86c93e9db8092";
-				var GITHUB_CLIENT_SECRET = "792a62e20fd60bc956919165407240ed2206cdb4";
-				var GITHUB_REDIRECT_URL = "https://stubrickthrough.github.io/testAPI/login";
-				// var param = "client_id=" + GITHUB_CLIENT_ID + "&state=" + state +
-				// 	"&redirect_uri=" + GITHUB_REDIRECT_URL + "&code=" + code +
-				// 	"&client_secret=" + GITHUB_CLIENT_SECRET;
-				// window.location.href = url + "?" + param;
-				$.post(url,{"client_id": GITHUB_CLIENT_ID, "state": state, "redirect_uri":GITHUB_REDIRECT_URL, "code": code, "client_secret": GITHUB_CLIENT_SECRET}, function(data){
-					console.log(data);
-				})
-			}
+		if (getQueryString('state') != 'ac') {
+			$('#info').text('可能遭到CSRF攻击！');
 		} else {
-			console.log(getQueryString('access_token'));
-			localStorage.setItem('github_token', getQueryString('access_token'));
-			$('#info').text('登陆成功！');
+
+			var state = getQueryString('state');
+			var url = "https://cors-anywhere.herokuapp.com/https://github.com/login/oauth/access_token";
+			var code = getQueryString('code');
+			var GITHUB_CLIENT_ID = "55c417c86c93e9db8092";
+			var GITHUB_CLIENT_SECRET = "792a62e20fd60bc956919165407240ed2206cdb4";
+			var GITHUB_REDIRECT_URL = "https://stubrickthrough.github.io/testAPI/login";
+			// var param = "client_id=" + GITHUB_CLIENT_ID + "&state=" + state +
+			// 	"&redirect_uri=" + GITHUB_REDIRECT_URL + "&code=" + code +
+			// 	"&client_secret=" + GITHUB_CLIENT_SECRET;
+			// window.location.href = url + "?" + param;
+
+			$.ajax({    
+				url: url,
+				type: "POST", 
+				data: {"client_id": GITHUB_CLIENT_ID, "state": state, "redirect_uri":GITHUB_REDIRECT_URL, "code": code, "client_secret": GITHUB_CLIENT_SECRET}, 
+				success: function (data) {
+					var name = 'access_token';
+					var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+					var r = data.substr(1).match(reg);
+					if (r != null) {
+						var token = unescape(r[2]);
+						localStorage.setItem('github_token', token);
+						$('#info').text('登陆成功！');
+					} else {
+						$('#info').text('登陆失败！');
+					}
+					console.log(data);
+				}
+			});
 		}
 	</script>
 
