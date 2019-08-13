@@ -133,7 +133,7 @@
 			return null;
 		}
 
-		if (getQueryString('code') == null) {
+		if (getQueryString('code') != null) {
 			if (getQueryString('state') != 'ac') {
 				$('#info').text('可能遭到CSRF攻击！');
 			} else {
