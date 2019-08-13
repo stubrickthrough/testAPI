@@ -135,7 +135,7 @@
 
 		if (getQueryString('state') != 'ac') {
 			$('#info').text('可能遭到CSRF攻击！');
-		} else {
+		} else if (getQueryString('code') == null){
 
 			var state = getQueryString('state');
 			var url = "https://github.com/login/oauth/access_token";
@@ -147,6 +147,8 @@
 				"&redirect_uri=" + GITHUB_REDIRECT_URL + "&code=" + code +
 				"&client_secret=" + GITHUB_CLIENT_SECRET;
 			window.location.href = url + "?" + param;
+		} else {
+			console.log(getQueryString('access_token'))
 		}
 	</script>
 
