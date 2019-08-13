@@ -1,0 +1,397 @@
+<!DOCTYPE HTML>
+<!--
+	Industrious by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+
+<head>
+	<title>Lesson 4 Mini calculator</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<link rel="icon" href="images/logo2.ico" />
+	<link rel="stylesheet" href="assets/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css">
+	<link rel="stylesheet" href="https://codemirror.net/theme/darcula.css" />
+	<link rel="stylesheet" href="https://codemirror.net/addon/fold/foldgutter.css">
+
+	<style>
+		.CodeMirror.cm-s-darcula.CodeMirror-wrap {
+			border-radius: 0.5rem;
+		}
+
+		.CodeMirror.cm-s-darcula.CodeMirror-wrap.CodeMirror-focused {
+			border-color: #ce1b28;
+			box-shadow: 0 0 0 3px #ce1b28;
+		}
+	</style>
+
+</head>
+
+<body class="is-preload">
+
+	<!-- Header -->
+	<header id="header">
+		<a class="logo" href="index.html">测试用例社区 - Testcase Community</a>
+		<nav>
+			<a href="#menu">目录</a>
+		</nav>
+	</header>
+
+	<!-- Nav -->
+	<nav id="menu">
+		<ul class="links">
+			<li><a href="index.html">主页</a></li>
+			<li><a href="Lesson01.html">Lesson 01</a></li>
+			<li><a href="Lesson02.html">Lesson 02</a></li>
+			<li><a href="Lesson03.html">Lesson 03</a></li>
+			<li><a href="Lesson04.html">Lesson 04</a></li>
+			<li><a href="Lesson05.html">Lesson 05</a></li>
+			<li><a href="Lesson06.html">Lesson 06</a></li>
+		</ul>
+	</nav>
+
+	<!-- Heading -->
+	<section id="heading">
+		<div class="inner">
+			<h1>Lesson 4 (Exercise 2)</h1>
+			<h1>Mini calculator</h1>
+			<h3>From CS100 Summer Homework</h3>
+		</div>
+	</section>
+
+	<!-- Content -->
+	<section id="main" class="wrapper">
+		<div class="inner">
+			<div class="content">
+
+				<fieldset class="layui-elem-field layui-field-title">
+					<legend>文档内容</legend>
+				</fieldset>
+				<div
+					style="padding-left: 100px; padding-right: 100px; font-size: 18px; font-family: Calibri, sans-serif;">
+					<p>In order to make programs that are more interesting than just a simple “Hello world” example that
+						does the same thing everytime, we need control statements that depend on conditions that may
+						possibly change each time we run the program. Two such control statements have already been
+						introduced (for-­‐loops and if-­‐else-­‐statements). The conditions may for example depend on a
+						variable user input to the program. The simplest way to provide such a variable user input is
+						through the console. Similar to the function <b>printf</b>, the header <b>&lt;stdio.h&gt;</b>
+						also provides a function <b>scanf</b> to read user input from the console. The function simply
+						reads characters input through the console, and in particular tries to read in a sequence of
+						characters that matches a pre-­‐defined format. The function furthermore lets us indicate
+						variables to which the input will be copied.</p>
+					<p>For example, the following statements will aim at reading in a sequence of a floating point
+						number, a character, and another floating point number from the console, and copy the result to
+						three variables that have been declared upfront:</p>
+					<pre><code>float var1;
+float var2;
+char op;
+scanf("%f %c %f", &var1, &op, &var2);
+getchar();
+</code></pre>
+					<p>"<b>%f %c %f</b>" declares the format of the entire sequence of the characters to be read from
+						the console, and "<b>%x</b>" is a special format specifier where <b>x</b> is to be replaced by
+						either <b>f</b> for floating point numbers, <b>d</b> for integer numbers, or <b>c</b> for a
+						single character (to again name just a few, the idea is similar than for the <b>printf</b>
+						function). "<b>getchar()</b>" is added to empty the input queue and remove the EOL (End of Line)
+						character added by hitting “Enter” on entering the sequence. Note the added character "<b>&</b>"
+						in front of each variable. This is the “address-­‐of”-­‐operator that makes sure that we pass
+						the address of the variables (i.e. pointers) rather than a copy of the variable itself. It
+						ensures that we really modify the original variables. You will learn more on this topic during
+						the class.</p>
+					<p>To create a condition based on the value of a certain character, you may for example write:</p>
+					<pre><code>if( op == ‘+’ ) {
+  ...
+} else {
+  ...
+}
+</code></pre>
+					<p>Note that the operator == here is not an assignment operator, it is a comparison operator that
+						produces either 0 or 1 depending on whether or not the left and right hand side expressions are
+						identical.</p>
+					<p>Ok, you should now have all necessary tools together to solve the second exercise. Your task is
+						to write a simple C program to evaluate arithmetic expressions. It should read in simple
+						arithmetic expressions composed of two numbers and one of the four basic arithmetic operations,
+						evaluate the result, and print it to the console. An example session will look as follows:</p>
+					<pre><code>Laurents­‐MacBook‐Pro:summer_homework laurent$ ./ex1
+Enter the arithmetic expression to be evaluated (e.g. 5 + 6): 
+<span style="color: #ce1b28">5 + 6</span>
+11.000000
+Did you want to enter another expression? (Enter 'y' or 'n'): <span style="color: #ce1b28">y</span>
+Enter the arithmetic expression to be evaluated (e.g. 5 + 6): 
+<span style="color: #ce1b28">3.67 -­ 5.12</span>
+-­1.450000
+Did you want to enter another expression? (Enter 'y' or 'n'): <span style="color: #ce1b28">y</span>
+Enter the arithmetic expression to be evaluated (e.g. 5 + 6): 
+<span style="color: #ce1b28">12 / 4.234</span>
+2.834199
+Did you want to enter another expression? (Enter 'y' or 'n'): <span style="color: #ce1b28">y</span>
+Enter the arithmetic expression to be evaluated (e.g. 5 + 6):  
+<span style="color: #ce1b28">3 * 9</span>
+27.000000
+Did you want to enter another expression? (Enter 'y' or 'n'): <span style="color: #ce1b28">n</span>
+Laurents­‐MacBook-­Pro:summer_homework laurent$
+</code></pre>
+					<p>Red text represents the user input. Note that rather than entering examples by hand, you may
+						forward the content of a text-­‐file to the console input. The output may also be redirected
+						into a file. This is achieved as follows:</p>
+					<pre><code>./myProgram < input.txt > output.txt</code></pre>
+					<p>This is useful as you may use our examples provided on the webpage and check whether or not the
+						produced output file exactly matches the provided example output. The online judge will also
+						make such a direct comparison of the produced and the expected output, and it needs to match
+						100% (Note however that—in contrast to the text in the console—the text in the output file does
+						not contain a copy of the user input including the line breaks added by the user). Use the
+						provided test cases to figure out the problem if your test cases do not pass (note that
+						differences as small as a missing or an added end-­‐of-­‐line command towards the end of the
+						file may be sufficient to make the test cases fail).</p>
+					<p>Please follow the instructions on the webpage to login to our online grading system and submit
+						your solution there. Please follow the exact instructions on how to register such that we are
+						able to unambiguously identify you. This is very important as the summer-­homeworks will be
+						graded and already make up for a small part of your overall grade.</p>
+				</div>
+				<!-- Form -->
+				<fieldset class="layui-elem-field layui-field-title">
+					<legend>在线测试 （语言：C；时间限制：1s）</legend>
+				</fieldset>
+				<div class="row gtr-uniform">
+
+					<!-- Break -->
+					<div class="col-12">
+						<div class="codearea">
+							<textarea name="textarea" id="textareaCode" rows="6"></textarea>
+							<table class="layui-hide" id="testcaseList" lay-filter="testcaseList"></table>
+						</div>
+					</div>
+					<!-- Break -->
+					<div class="col-12">
+						<ul class="actions">
+							<li><input type="submit" value="提交代码" class="primary" id="submitBTN" /></li>
+							<li><button id="addTestcase">添加自定义测试用例</button></li>
+							<li><button id="login">登录</button></li>
+						</ul>
+					</div>
+					<!-- Break -->
+					<div class="col-12">
+						<div class="layui-progress" lay-filter="curProgress">
+							<div class="layui-progress-bar layui-bg-red" lay-percent="100%"><span id="progressBar"
+									class="layui-progress-text"></span></div>
+						</div>
+					</div>
+					<!-- Break -->
+					<div class="col-12">
+						<fieldset class="layui-elem-field">
+							<legend>当前状态</legend>
+							<div id="curStatus" class="layui-field-box">
+								<h3 style="text-align:center">无提交记录</h3>
+							</div>
+						</fieldset>
+						<table class="layui-hide" id="testResult"></table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		
+	</section>
+
+	<!-- Contact & Donate -->
+	<section id="cta" class="wrapper">
+		<div class="inner">
+			<header class="special">
+				<h2>有话想说？</h2>
+				<ul class="actions special">
+					<a href="https://www.diaochapai.com/survey3000919" target="_blank" class="button primary">联系我们</a>
+				</ul>
+			</header>
+		</div>
+	</section>
+
+
+	<!-- Footer -->
+	<footer id="footer">
+		<div class="inner">
+			<div class="content">
+				<section>
+					<h3>关于社区</h3>
+					<p>测试用例社区（Testcase Community）是希望为学习信息方向相关课程的同学提供便利的社区。社区功能还没有实现，目前仅支持在线测试（Autograde）功能。
+						在编写程序的过程中，最让人头疼的其实是一些边界、极端的测试用例，以及程序中不起眼的BUG。我希望通过这个社区，可以让所有学习者分享、
+						贡献测试用例，并且方便地进行测试，借此减少DEBUG的时间，提高学习效率，减少抄袭的发生。
+					</p>
+				</section>
+				<section>
+					<h4>快速访问</h4>
+					<ul class="alt">
+						<li><a href="http://www.shanghaitech.edu.cn/" target="_blank">上海科技大学</a></li>
+						<li><a href="http://mpl.sist.shanghaitech.edu.cn/Teaching_CS100.html" target="_blank">CS100:
+								Summer Homework Page</a></li>
+						<li><a href="https://github.com/SIST-Manual/SIST_Manual" target="_blank">SIST-Manual</a></li>
+					</ul>
+				</section>
+				<section>
+					<h4>联系方式</h4>
+					<ul class="plain">
+						<li><a href="mailto:wuhy1@shanghaitech.edu.cn"><i
+									class="icon fa-envelope-o">&nbsp;</i>E-mail</a></li>
+						<li><a href="https://github.com/why-in-Shanghaitech" target="_blank"><i
+									class="icon fa-github">&nbsp;</i>Github</a></li>
+					</ul>
+				</section>
+			</div>
+			<div class="copyright">
+				&copy; 2019 Testcase Community. Website support <a href="https://templated.co/"
+					target="_blank">Templated</a>.
+				Picture from <a href="http://www.shanghaitech.edu.cn/mlxy/list.htm" target="_blank">ShanghaiTech</a>.
+				Server support <a href="http://www.dooccn.com/c/" target="_blank">Dooccn</a>. All rights reserved.
+			</div>
+		</div>
+	</footer>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+	<script src="https://codemirror.net/lib/codemirror.js"></script>
+	<script src="https://codemirror.net/mode/clike/clike.js"></script>
+
+	<script src="https://codemirror.net/addon/selection/active-line.js"></script>
+	<script src="https://codemirror.net/addon/fold/foldcode.js"></script>
+	<script src="https://codemirror.net/addon/fold/foldgutter.js"></script>
+	<script src="https://codemirror.net/addon/fold/brace-fold.js"></script>
+	<script src="https://codemirror.net/addon/fold/indent-fold.js"></script>
+
+	<script src="assets/layui/layui.js" charset="utf-8"></script>
+	<script src="assets/layui/form.js"></script>
+
+	<!-- <script src="https://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script> -->
+	<script src="https://www.w3xue.com/tools/support/base64.min.js"></script>
+
+	<script src="assets/js/test.js"></script>
+
+	<script type="text/html" id="statusTpl">
+				{{#  if(d.status === 'Accept'){ }}
+					<span style="color: #449D54; font-weight:bold;">测试通过 Accept</span>
+				{{#  } else if(d.status === 'Compile Error'){ }}
+					<span style="color: #e8a60b; font-weight:bold;">编译错误 Compile Error</span>
+				{{#  } else if(d.status === 'Runtime Error'){ }}
+					<span style="color: #D04051; font-weight:bold;">运行错误 Runtime Error</span>
+				{{#  } else if(d.status === 'Time Limit Exceeded'){ }}
+					<span style="color: #D04051; font-weight:bold;">超出时间 Time Limit Exceeded</span>
+				{{#  } else if(d.status === 'Wrong Answer'){ }}
+					<span style="color: #D04051; font-weight:bold;">答案错误 Wrong Answer</span>
+				{{#  } else if(d.status === 'Pre-Test Error'){ }}
+					<span style="color: #AA38F5; font-weight:bold;">预检错误 Pre-Test Error</span>
+				{{#  } }}
+			</script>
+
+	<script type="text/html" id="detailTpl">
+				<a href="javascript:active['offset'].call('#detailButton', $('#detailButton'), {{d.detail}});" class="icon fa-search" id="detailButton"><span class="label">详情</span></a>
+			</script>
+
+	<script type="text/html" id="operate">
+				<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+				<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+			</script>
+
+	<script type="text/html" id="statusInfo">
+				{{#  if(d.status === 'processing'){ }}
+					<div style = "text-align:center;">
+						<i class="layui-icon layui-icon-loading-1 layui-anim layui-anim-rotate layui-anim-loop" style="font-size: 30px;"></i>
+					</div>
+					<h3 style = "text-align:center;">{{ d.content }}</h3>
+				{{#  } else if(d.status === 'error'){ }}
+					<h3 style = "text-align:center;">运行失败！</h3>
+					<h3 style = "text-align:center;"><span style="color: #D04051;">{{ d.content }}</span></h3>
+					<h3 style = "text-align:center;">请稍后重试。</h3>
+				{{#  } else if(d.status === 'finished'){ }}
+				{{#  if (d.content.pe != 0) { }}
+					<h3 style = "text-align:center;">运行失败！</h3>
+					<h3 style = "text-align:center;"><span style="color: #AA38F5;">预检错误 Pre-Test Error</span></h3>
+				{{#  } else if(d.content.ce != 0){ }}
+					<h3 style = "text-align:center;">运行失败！</h3>
+					<h3 style = "text-align:center;"><span style="color: #e8a60b;">编译错误 Compile Error</span></h3>
+				{{#  } else { }}
+					<h3 style = "text-align:center;">运行成功！</h3>
+				{{#  if (d.content.re != 0) { }}
+					<h3 style = "text-align:center;"><span style="color: #D04051;">运行错误 Runtime Error</span></h3>
+					<h3 style = "text-align:center; line-height: 1;">{{ d.content.re }}个</h3>
+				{{#  } if (d.content.tle != 0) { }}
+					<h3 style = "text-align:center;"><span style="color: #D04051;">超出时间 Time Limit Exceeded</span></h3>
+					<h3 style = "text-align:center; line-height: 1;">{{ d.content.tle }}个</h3>
+				{{#  } if (d.content.wa != 0) { }}
+					<h3 style = "text-align:center;"><span style="color: #D04051;">答案错误 Wrong Answer</span></h3>
+					<h3 style = "text-align:center; line-height: 1;">{{ d.content.wa }}个</h3>
+				{{#  } if (d.content.ac != 0) { }}
+					<h3 style = "text-align:center;"><span style="color: #449D54;">测试通过 Accept</span></h3>
+					<h3 style = "text-align:center; line-height: 1;">{{ d.content.ac }}个</h3>
+				{{#  };};} }}
+			</script>
+
+	<script>
+		var testcases = [{
+				"id": "1001",
+				"description": "Calculator test 11.in",
+				"input": "6 + 7\nn\n",
+				"answer": "Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n13.000000\nDid you want to enter another expression? (Enter 'y' or 'n'): \n"
+			}, {
+				"id": "1002",
+				"description": "Calculator test 12.in",
+				"input": "2 * -8\nn\n",
+				"answer": "Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n-16.000000\nDid you want to enter another expression? (Enter 'y' or 'n'): \n"
+			}, {
+				"id": "1003",
+				"description": "Calculator test 13.in",
+				"input": "9-11\nn\n",
+				"answer": "Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n-2.000000\nDid you want to enter another expression? (Enter 'y' or 'n'): \n"
+			}, {
+				"id": "1004",
+				"description": "Calculator test 14.in",
+				"input": "-3 / 1756.7\nn\n",
+				"answer": "Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n-0.001708\nDid you want to enter another expression? (Enter 'y' or 'n'): \n"
+			}, {
+				"id": "1005",
+				"description": "Calculator test 15.in",
+				"input": "89.42 * 4.543\nn\n",
+				"answer": "Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n406.235077\nDid you want to enter another expression? (Enter 'y' or 'n'):\n"
+			}, {
+				"id": "1006",
+				"description": "Calculator test 16.in",
+				"input": "-6 + -6\nn\n",
+				"answer": "Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n-12.000000\nDid you want to enter another expression? (Enter 'y' or 'n'):\n"
+			}, {
+				"id": "1007",
+				"description": "Calculator test 17.in",
+				"input": "-5.234 - -9.876\nn\n",
+				"answer": "Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n4.642000\nDid you want to enter another expression? (Enter 'y' or 'n'):\n"
+			}, {
+				"id": "1008",
+				"description": "Calculator test 18.in",
+				"input": "6 + 7\ny\n2 * -8\ny\n9-11\ny\n-3 / 1756.7\ny\n89.42 * 4.543\ny\n-6 + -6\ny\n-5.234 - -9.876\nn\n",
+				"answer": "Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n13.000000\nDid you want to enter another expression? (Enter 'y' or 'n'): Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n-16.000000\nDid you want to enter another expression? (Enter 'y' or 'n'): Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n-2.000000\nDid you want to enter another expression? (Enter 'y' or 'n'): Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n-0.001708\nDid you want to enter another expression? (Enter 'y' or 'n'): Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n406.235077\nDid you want to enter another expression? (Enter 'y' or 'n'): Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n-12.000000\nDid you want to enter another expression? (Enter 'y' or 'n'): Enter the arithmetic expression to be evaluated (e.g. 5 + 6):\n4.642000\nDid you want to enter another expression? (Enter 'y' or 'n'):\n"
+			}];
+		var compileInput = "5 + 6\nn";
+		var runcode = 7; // C
+		var timeLimit = 1;
+	</script>
+
+	<script>
+		$('#login').click(function(){
+			var url = "https://github.com/login/oauth/authorize";
+			var GITHUB_CLIENT_ID = "";
+			var GITHUB_REDIRECT_URL = "";
+			var state = "ac";
+			var param = "response_type=code&" + "client_id=" + GITHUB_CLIENT_ID + "&state=" + state +
+				"&redirect_uri=" + GITHUB_REDIRECT_URL;
+			window.open(url + "?" + param, "_blank");
+		});
+	</script>
+</body>
+
+</html>

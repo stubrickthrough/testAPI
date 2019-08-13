@@ -177,7 +177,7 @@ testcaseList.initialize(function(tableObj){
         ,cols: [col]
         ,page: { layout: ['prev', 'page', 'next', 'count'] }
         ,initSort: {field:'id', type:'asc'}
-        ,limit: 5
+        ,limit: 10
     }
     testcaseList.rederTable(ops,function () {
         testcases.forEach(element => {
@@ -563,7 +563,7 @@ function caseTest (code, index) {
                         } else if (output == "Time Limit Exceeded" || output == "Execution Timed Out") {
                             var detailID = detail.push({
                                         "id": id,
-                                        "error": "The time limit is 1s."
+                                        "error": "The time limit is "+timeLimit+"s."
                                     })
                             timeLimitExceeded(id, detailID-1);
                         } else if (output == answer) {
