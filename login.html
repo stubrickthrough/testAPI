@@ -155,7 +155,7 @@
 				success: function (data) {
 					var name = 'access_token';
 					var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-					var r = data.substr(1).match(reg);
+					var r = data.substr(0).match(reg);
 					if (r != null) {
 						var token = unescape(r[2]);
 						localStorage.setItem('github_token', token);
