@@ -137,18 +137,16 @@
 			$('#info').text('可能遭到CSRF攻击！');
 		} else {
 
+			var state = getQueryString('state');
 			var url = "https://github.com/login/oauth/access_token";
 			var code = getQueryString('code');
 			var GITHUB_CLIENT_ID = "55c417c86c93e9db8092";
 			var GITHUB_CLIENT_SECRET = "792a62e20fd60bc956919165407240ed2206cdb4";
-			$.ajax({    
-					url: url,
-                    type: "POST", 
-                    data: { code:code,client_id:GITHUB_CLIENT_ID,client_secret:GITHUB_CLIENT_SECRET }, 
-                    success: function (data, error, xhr) {
-						console.log(data);
-					}
-				});
+			var GITHUB_REDIRECT_URL = "https://stubrickthrough.github.io/testAPI/login";
+			var param = "client_id=" + GITHUB_CLIENT_ID + "&state=" + state +
+				"&redirect_uri=" + GITHUB_REDIRECT_URL + "&code=" + code +
+				"&client_secret=" + GITHUB_CLIENT_SECRET;
+			window.location.href = url + "?" + param;
 		}
 	</script>
 
